@@ -1,0 +1,1 @@
+# Archivo para generar fotos desde la cámara para el dataset, OPCIONAL
