@@ -92,8 +92,7 @@ Para garantizar la correcta ejecución del memorizador *Simón dice*, es necesar
 ```bash
 conda create --name VC_Trabajo python=3.11.5
 conda activate VC_Trabajo
-pip install cv2
-pip install numpy
+pip install opencv-python numpy
 ```
   
 
