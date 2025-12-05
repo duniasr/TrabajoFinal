@@ -93,10 +93,7 @@ Para garantizar la correcta ejecución del memorizador *Simón dice*, es necesar
 conda create --name VC_Trabajo python=3.11.5
 conda activate VC_Trabajo
 pip install cv2
-pip install mediapipe
 pip install numpy
-pip install pickle
-pip install scikit-learn
 ```
   
 
