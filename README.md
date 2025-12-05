@@ -1,12 +1,26 @@
-# Trabajo de Curso - Memorizador (Simón dice)  
+<div align="center">
+  <img src="https://www.eii.ulpgc.es/sites/default/files/eii-acron-mod.png"
+      alt="Logo ULPGC"
+      width="400"
+      style="margin-bottom: 10px;"
+   >
+</div>
+
+<h1 align="center">Trabajo de Curso - Memorizador (Simón dice)</h1>
+
+<div align="center" style="font-family: 'Segoe UI', sans-serif; line-height: 1.6; margin-top: 30px;">
+  <h2 style="font-size: 28px; margin-bottom: 10px;">
+    Titulación: Grado en Ingeniería Informática
+  </h2>
+  <h3 style="font-size: 24px; margin-bottom: 10px;">
+    Visión por Computador
+  </h3>
+</div>
 
 **Autores:**  
 - Laura Herrera Negrín  
 - Dunia Suárez Rodríguez  
-- Ayman Asbai Ghoudan
-
-**Universidad:** Universidad de Las Palmas de Gran Canaria  
-**Asignatura:** Visión por Computador  
+- Ayman Asbai Ghoudan  
 
 <a name="trabajo"></a>
 ## Breve Descripción
