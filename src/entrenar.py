@@ -1,1 +1,0 @@
-# Archivo para entrenar el modelo
