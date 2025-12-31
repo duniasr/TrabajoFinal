@@ -87,6 +87,8 @@ El presente proyecto, titulado <<Simon Dice>>, consiste en el desarrollo de una 
 
 El sistema es capaz de reconocer gestos faciales y manuales del jugador en tiempo real a través de una webcam, interpretándolos como comandos de juego. Esto permite una experiencia inmersiva donde el jugador debe replicar secuencias de movimientos corporales.
 
+Este enfoque se enmarca dentro de las \textbf{interfaces naturales de usuario (NUI)}, que buscan eliminar la barrera física entre la persona y la máquina, permitiendo una interacción más intuitiva y fluida basada en las capacidades motrices humanas naturales.
+
 \subsection{Objetivos}
 \begin{itemize}
     \item Implementar un sistema de reconocimiento de gestos robusto utilizando técnicas de aprendizaje automático (Machine Learning).
@@ -153,16 +155,21 @@ Para la construcción del \textit{dataset}, inicialmente se realizó una búsque
     \item \href{https://www.kaggle.com/datasets/innominate817/hagrid-sample-30k-384p}{HaGRID} (HAnd Gesture Recognition Image Dataset), para el reconocimiento de posturas de la mano.
 \end{itemize}
 
-Sin embargo, para adaptar el sistema a las necesidades específicas del juego (gestos concretos como <<guiño>> o combinaciones particulares) y mejorar la robustez ante el entorno real de uso, se desarrolló un código específico para enriquecer el conjunto de datos. Mediante los scripts \texttt{GuardarGestosCara.ipynb} y \texttt{GuardarGestosManoCuerpo.ipynb}, se capturaron imágenes propias utilizando la webcam, almacenándolas en carpetas etiquetadas (ej. \texttt{dataset/gestos\_cara/0\_Neutro}) para complementar las muestras obtenidas de fuentes externas.
+Sin embargo, para adaptar el sistema a las necesidades específicas del juego y mejorar la robustez ante el entorno real de uso, se desarrolló un código específico para enriquecer el conjunto de datos. Mediante los scripts \texttt{GuardarGestosCara.ipynb} y \texttt{GuardarGestosManoCuerpo.ipynb}, se capturaron imágenes propias utilizando la webcam, almacenándolas en carpetas etiquetadas para complementar las muestras obtenidas de fuentes externas.
+
+Las clases definidas para el reconocimiento incluyen:
+\begin{itemize}
+    \item \textbf{Gestos faciales}: Neutro, ojos cerrados, cabeza derecha y cabeza izquierda.
+    \item \textbf{Gestos manuales}: Mano arriba (izquierda/derecha), puños cerrados, pulgar arriba, señal de victoria, gesto de rock, llamada y OK.
+\end{itemize}
 
 \subsection{Fase 2: Procesamiento y entrenamiento}
-El entrenamiento se realiza en los notebooks \texttt{EntrenoCara.ipynb} y \texttt{EntrenoMano.ipynb}. El flujo de trabajo es el siguiente:
+El entrenamiento se realiza en los notebooks \texttt{EntrenoCara.ipynb} y \texttt{EntrenoManoCuerpo.ipynb}. El flujo de trabajo es el siguiente:
 
-\subsubsection{Extracción de características}
-En lugar de procesar la imagen cruda (píxeles), lo cual sería costoso y propenso a errores por iluminación, se utilizan los \textbf{landmarks} de MediaPipe. 
+En lugar de procesar la imagen cruda (píxeles), lo cual sería costoso computacionalmente y propenso a errores por cambios de iluminación, se utilizan los \textbf{landmarks} (puntos clave) de MediaPipe. Esta decisión permite una inferencia mucho más rápida, esencial para la fluidez del juego.
 \begin{itemize}
-    \item Para la cara, se extrae la malla facial.
-    \item Para las manos, se extraen los 21 puntos clave de la mano.
+    \item \textbf{Malla facial (Face Mesh)}: Genera una malla densa de 468 puntos tridimensionales que mapean la superficie del rostro. Esto permite detectar sutilezas como el cierre de los ojos o la rotación de la cabeza con gran precisión.
+    \item \textbf{Manos (Hands)}: Identifica 21 puntos clave por cada mano, incluyendo muñeca y falanges de cada dedo. La topología de esqueleto permite inferir gestos complejos independientemente del tamaño de la mano del usuario.
 \end{itemize}
 
 \subsubsection{Preprocesamiento y normalización}
@@ -209,7 +216,26 @@ El núcleo del juego se encuentra en \texttt{src/game/game.ipynb}. El sistema fu
 
 \newpage
 
-% 4. MANUAL DE USUARIO
+% 5. DESAFÍOS TÉCNICOS
+\section{Desafíos técnicos y soluciones}
+
+Durante el desarrollo del proyecto surgieron varios retos inherentes a la aplicación de visión por computador en entornos no controlados:
+
+\subsection{Variabilidad en la iluminación}
+Los algoritmos de detección visual son sensibles a las condiciones de luz extremas (contraluz o oscuridad). \\
+\textbf{Solución}: La normalización de las coordenadas de los landmarks hace que el modelo dependa de la geometría relativa de los puntos y no de los valores de intensidad de los píxeles, mitigando parcialmente este problema.
+
+\subsection{Oclusiones parciales}
+En ocasiones, al realizar gestos cerca de la cara, las manos pueden ocultar partes del rostro, confundiendo al detector facial. \\
+\textbf{Solución}: Se implementó una lógica de priorización en el bucle principal del juego y se ajustaron los umbrales de confianza (\texttt{min\_detection\_confidence}) para reducir falsos positivos.
+
+\subsection{Latencia en tiempo real}
+El procesamiento de vídeo requiere un alto rendimiento para no afectar a la jugabilidad. \\
+\textbf{Solución}: El uso de clasificadores MLP (redes neuronales simples) sobre vectores de características ligeros, en lugar de redes convolucionales profundas (CNN) sobre imágenes completas, garantiza una tasa de fotogramas (FPS) alta incluso en equipos con hardware modesto.
+
+\newpage
+
+% 6. MANUAL DE USUARIO
 \section{Manual de usuario}
 
 \subsection{Requisitos previos}
@@ -233,7 +259,7 @@ pip install opencv-python numpy mediapipe scikit-learn
 
 \newpage
 
-% 5. CONCLUSIONES
+% 7. CONCLUSIONES
 \section{Conclusiones}
 Este proyecto demuestra la viabilidad de crear interfaces hombre-máquina naturales y accesibles utilizando hardware de consumo estándar (webcam). La combinación de la extracción de características geométricas (mediante MediaPipe) con clasificadores ligeros (MLP) permite una inferencia en tiempo real extremadamente rápida, adecuada para videojuegos.
 
@@ -241,7 +267,7 @@ El uso de técnicas como la normalización de coordenadas y el aumento de datos 
 
 \newpage
 
-% 6. BIBLIOGRAFÍA
+% 8. BIBLIOGRAFÍA
 \section{Bibliografía}
 \begin{itemize}
     \item Documentación de OpenCV: \url{https://docs.opencv.org/}
