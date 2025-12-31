@@ -1,0 +1,253 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% Márgenes
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
+
+% Colores para código
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Encabezado y pie de página
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Memorizador - Simón Dice}
+\lhead{Visión por Computador}
+\cfoot{\thepage}
+
+\begin{document}
+
+% PORTADA
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    \includegraphics[width=0.4\textwidth]{../assets/eii-acron-mod.png} 
+    \vspace{1.5cm}
+    
+    {\Large Grado en Ingeniería Informática}\\[0.5cm]
+    {\Large Asignatura: Visión por Computador}
+    
+    \vspace{2cm}
+    
+    {\Huge \textbf{TRABAJO FINAL DE ASIGNATURA}}\\[0.5cm]
+    {\Huge \textit{Simon Dice}}
+    
+    \vspace{2cm}
+    
+    \textbf{Autores:}\\
+    Laura Herrera Negrín\\
+    Dunia Suárez Rodríguez\\
+    Ayman Asbai Ghoudan
+    
+    \vspace{2cm}
+    
+    \today
+    
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% 1. INTRODUCCIÓN
+\section{Introducción}
+
+\subsection{Descripción del proyecto}
+El presente proyecto, titulado <<Simon Dice>>, consiste en el desarrollo de una versión moderna e interactiva del clásico juego de memoria <<Simón Dice>>. La innovación principal radica en la interfaz de usuario: en lugar de utilizar botones físicos o periféricos convencionales (teclado/ratón), el juego se controla enteramente mediante \textbf{visión artificial (Computer Vision)}.
+
+El sistema es capaz de reconocer gestos faciales y manuales del jugador en tiempo real a través de una webcam, interpretándolos como comandos de juego. Esto permite una experiencia inmersiva donde el jugador debe replicar secuencias de movimientos corporales.
+
+\subsection{Objetivos}
+\begin{itemize}
+    \item Implementar un sistema de reconocimiento de gestos robusto utilizando técnicas de aprendizaje automático (Machine Learning).
+    \item Desarrollar una lógica de juego interactiva que responda en tiempo real a las acciones del usuario.
+    \item Integrar librerías de visión por computador como OpenCV y MediaPipe para la extracción de características.
+    \item Entrenar clasificadores neuronales (MLP) para distinguir entre diferentes gestos (cara y manos).
+\end{itemize}
+
+\newpage
+
+% 2. TECNOLOGÍAS UTILIZADAS
+\section{Tecnologías y herramientas}
+
+Para el desarrollo de este proyecto se ha utilizado un stack tecnológico basado en Python, aprovechando su extenso ecosistema para ciencia de datos y visión artificial.
+
+\subsection{Lenguaje y entorno}
+\begin{itemize}
+    \item \textbf{Python 3.11}: Lenguaje principal del proyecto.
+    \item \textbf{Conda}: Gestor de entornos utilizado para aislar las dependencias (entorno \texttt{VC\_Trabajo} o \texttt{memo\_env}).
+    \item \textbf{Jupyter Notebooks}: Utilizados para el prototipado, generación de datasets y entrenamiento de modelos.
+\end{itemize}
+
+\subsection{Librerías principales}
+\begin{itemize}
+    \item \textbf{OpenCV (cv2)}: Herramienta fundamental para la captura de vídeo desde la webcam, procesamiento de imágenes (cambios de espacio de color BGR a RGB) y visualización en tiempo real.
+    \item \textbf{MediaPipe}: Framework desarrollado por Google, utilizado para la detección de hitos (landmarks) faciales y manuales. Específicamente se usan los módulos \texttt{FaceMesh} (malla facial) y \texttt{Hands} (detección de manos).
+    \item \textbf{Scikit-Learn}: Utilizada para la implementación de algoritmos de Machine Learning. En concreto, se ha empleado el \texttt{MLPClassifier} (Perceptrón Multicapa) para la clasificación de los gestos basándose en los landmarks extraídos.
+    \item \textbf{NumPy}: Para operaciones matemáticas eficientes y manipulación de arrays, crucial para la normalización de coordenadas.
+    \item \textbf{Pickle}: Para la serialización y guardado de los modelos entrenados (\texttt{.pkl}).
+\end{itemize}
+
+\newpage
+
+% 3. ESTRUCTURA DEL REPOSITORIO
+\section{Estructura del repositorio}
+El proyecto se organiza en la siguiente estructura de directorios, separando el código fuente (\texttt{src}), los datos (\texttt{dataset}) y la documentación:
+
+\begin{verbatim}
+/
+|-- dataset/                # Imágenes para entrenamiento
+|   |-- gestos_cara/        # Dataset de gestos faciales
+|   |-- gestos_manos/       # Dataset de gestos manuales
+|
+|-- src/                    # Código fuente del proyecto
+|   |-- game/               # Lógica del juego (Simon Says)
+|   |-- generate_images/    # Scripts para captura de datos
+|   |-- memory/             # Documentación LaTeX
+|   |-- scripts/            # Utilidades auxiliares
+|   |-- train/              # Notebooks de entrenamiento (MLP)
+|
+|-- README.md               # Documentación general y setup
+\end{verbatim}
+
+\newpage
+
+% 4. METODOLOGÍA Y DESARROLLO
+\section{Metodología y desarrollo}
+
+El proyecto se divide en tres fases principales: generación del dataset, entrenamiento de modelos y lógica del juego.
+\subsection{Fase 1: Generación del dataset}
+Para la construcción del \textit{dataset}, inicialmente se realizó una búsqueda de imágenes en repositorios públicos como Kaggle. Se identificaron conjuntos de datos relevantes, tales como:
+\begin{itemize}
+    \item \href{https://www.kaggle.com/datasets/ahamedfarouk/cew-dataset}{CEW Dataset} (Closed Eyes in the Wild), útil para la detección de ojos cerrados.
+    \item \href{https://www.kaggle.com/datasets/innominate817/hagrid-sample-30k-384p}{HaGRID} (HAnd Gesture Recognition Image Dataset), para el reconocimiento de posturas de la mano.
+\end{itemize}
+
+Sin embargo, para adaptar el sistema a las necesidades específicas del juego (gestos concretos como <<guiño>> o combinaciones particulares) y mejorar la robustez ante el entorno real de uso, se desarrolló un código específico para enriquecer el conjunto de datos. Mediante los scripts \texttt{GuardarGestosCara.ipynb} y \texttt{GuardarGestosManoCuerpo.ipynb}, se capturaron imágenes propias utilizando la webcam, almacenándolas en carpetas etiquetadas (ej. \texttt{dataset/gestos\_cara/0\_Neutro}) para complementar las muestras obtenidas de fuentes externas.
+
+\subsection{Fase 2: Procesamiento y entrenamiento}
+El entrenamiento se realiza en los notebooks \texttt{EntrenoCara.ipynb} y \texttt{EntrenoMano.ipynb}. El flujo de trabajo es el siguiente:
+
+\subsubsection{Extracción de características}
+En lugar de procesar la imagen cruda (píxeles), lo cual sería costoso y propenso a errores por iluminación, se utilizan los \textbf{landmarks} de MediaPipe. 
+\begin{itemize}
+    \item Para la cara, se extrae la malla facial.
+    \item Para las manos, se extraen los 21 puntos clave de la mano.
+\end{itemize}
+
+\subsubsection{Preprocesamiento y normalización}
+Los puntos extraídos ($x, y, z$) se normalizan para que el modelo sea invariante a la posición del usuario en la pantalla y a la distancia a la cámara.
+\begin{lstlisting}[language=Python, caption=Función de normalización]
+def normalizar_puntos(landmarks):
+    coords = np.array([[lm.x, lm.y] for lm in landmarks])
+    centroid = np.mean(coords, axis=0) # Centrar
+    centered = coords - centroid
+    max_dist = np.max(np.abs(centered)) # Escalar
+    return (centered / max_dist).flatten()
+\end{lstlisting}
+
+\subsubsection{Data augmentation (aumento de datos)}
+Para mejorar la robustez del modelo con pocos datos, se generan variaciones sintéticas de cada muestra original:
+\begin{itemize}
+    \item \textbf{Ruido Gaussiano}: Simula imperfecciones en la detección.
+    \item \textbf{Escalado}: Simula ligeros acercamientos o alejamientos.
+    \item \textbf{Rotación}: Simula inclinaciones de la cabeza o mano.
+\end{itemize}
+
+\subsubsection{Modelo de clasificación}
+Se utiliza una red neuronal artificial (MLP).
+\begin{itemize}
+    \item \textbf{Arquitectura cara}: Capas ocultas de (128, 64) neuronas.
+    \item \textbf{Arquitectura manos}: Capas ocultas de (64, 32) neuronas.
+    \item \textbf{Validación}: Se utiliza Cross-Validation (K-Fold estratificado) para asegurar que el modelo generaliza correctamente, obteniendo altas tasas de precisión en las pruebas.
+\end{itemize}
+
+\subsection{Fase 3: Lógica del juego (Simon Says)}
+El núcleo del juego se encuentra en \texttt{src/game/game.ipynb}. El sistema funciona como una máquina de estados:
+\begin{enumerate}
+    \item \textbf{Generación de secuencia}: El sistema elige una serie de gestos aleatorios.
+    \item \textbf{Muestra}: Se indica al usuario qué gestos debe realizar (mediante texto o iconos en pantalla).
+    \item \textbf{Escucha (inferencia)}: Se activa la cámara y el modelo predice en tiempo real qué gesto está haciendo el usuario.
+    \item \textbf{Validación}: Si el gesto coincide con el esperado en la secuencia, se avanza. Si falla o tarda demasiado, pierde.
+\end{enumerate}
+
+\textbf{Mecánicas adicionales:}
+\begin{itemize}
+    \item \textbf{Trampa <<Simón Dice>>}: El juego puede intentar engañar al usuario mostrando instrucciones con un nombre diferente (ej. <<Modesto dice>>). Si el usuario realiza el gesto cuando no lo dijo <<Simón>>, pierde.
+    \item \textbf{Dificultad incremental}: Aumenta la longitud de la secuencia y disminuye el tiempo permitido por ronda.
+\end{itemize}
+
+\newpage
+
+% 4. MANUAL DE USUARIO
+\section{Manual de usuario}
+
+\subsection{Requisitos previos}
+Es necesario disponer de una webcam funcional y un entorno con las librerías instaladas:
+\begin{verbatim}
+pip install opencv-python numpy mediapipe scikit-learn
+\end{verbatim}
+
+\subsection{Ejecución}
+1. Abrir el proyecto en un editor compatible con Jupyter Notebooks (VS Code o Jupyter Lab).
+2. Ejecutar el archivo principal del juego: \texttt{src/game/game.ipynb}.
+3. Seguir las instrucciones en pantalla.
+
+\subsection{Cómo jugar}
+\begin{enumerate}
+    \item El juego mostrará una secuencia de acciones (ej. <<Cerrar Ojos>>, <<Mano Arriba>>).
+    \item Memoriza la secuencia.
+    \item Cuando sea tu turno, repite los gestos frente a la cámara en el mismo orden.
+    \item ¡Cuidado! Si la instrucción no empieza por <<Simón dice>> (o la indicación visual correspondiente), no debes moverte.
+\end{enumerate}
+
+\newpage
+
+% 5. CONCLUSIONES
+\section{Conclusiones}
+Este proyecto demuestra la viabilidad de crear interfaces hombre-máquina naturales y accesibles utilizando hardware de consumo estándar (webcam). La combinación de la extracción de características geométricas (mediante MediaPipe) con clasificadores ligeros (MLP) permite una inferencia en tiempo real extremadamente rápida, adecuada para videojuegos.
+
+El uso de técnicas como la normalización de coordenadas y el aumento de datos ha sido crucial para obtener un sistema robusto que funcione con diferentes usuarios y condiciones de iluminación.
+
+\newpage
+
+% 6. BIBLIOGRAFÍA
+\section{Bibliografía}
+\begin{itemize}
+    \item Documentación de OpenCV: \url{https://docs.opencv.org/}
+    \item MediaPipe Solutions: \url{https://google.github.io/mediapipe/}
+    \item Scikit-Learn Documentation: \url{https://scikit-learn.org/stable/}
+    \item Ultralytics YOLO (referencia conceptual): \url{https://github.com/ultralytics/ultralytics}
+\end{itemize}
+
+\end{document}

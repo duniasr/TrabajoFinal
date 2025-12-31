@@ -1,0 +1,8 @@
+# Memoria
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.gz
