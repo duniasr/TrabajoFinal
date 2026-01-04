@@ -52,7 +52,7 @@
     \centering
     \vspace*{1cm}
     
-    \includegraphics[width=0.4\textwidth]{../assets/eii-acron-mod.png} 
+    \includegraphics[width=0.4\textwidth]{assets/eii-acron-mod.png} 
     \vspace{1.5cm}
     
     {\Large Grado en Ingeniería Informática}\\[0.5cm]
@@ -83,41 +83,49 @@
 \section{Introducción}
 
 \subsection{Descripción del proyecto}
-El presente proyecto, titulado <<Simon Dice>>, consiste en el desarrollo de una versión moderna e interactiva del clásico juego de memoria <<Simón Dice>>. La innovación principal radica en la interfaz de usuario: en lugar de utilizar botones físicos o periféricos convencionales (teclado/ratón), el juego se controla enteramente mediante \textbf{visión artificial (Computer Vision)}.
+El presente proyecto, titulado <<Simon Dice>>, consiste en el desarrollo de una versión moderna e interactiva del clásico juego de memoria <<Simón Dice>>. La innovación principal radica en la interfaz de usuario: en lugar de utilizar botones físicos o periféricos convencionales (teclado, ratón o mandos), el juego se controla enteramente mediante \textbf{visión artificial (Computer Vision)}.
 
-El sistema es capaz de reconocer gestos faciales y manuales del jugador en tiempo real a través de una webcam, interpretándolos como comandos de juego. Esto permite una experiencia inmersiva donde el jugador debe replicar secuencias de movimientos corporales.
+El sistema es capaz de reconocer gestos faciales y manuales del jugador en tiempo real a través de una webcam, interpretándolos como comandos de juego. Esto permite una experiencia inmersiva donde el jugador debe replicar secuencias de movimientos corporales (gesticular, mover la cabeza, cerrar ojos) para avanzar.
 
 Este enfoque se enmarca dentro de las \textbf{interfaces naturales de usuario (NUI)}, que buscan eliminar la barrera física entre la persona y la máquina, permitiendo una interacción más intuitiva y fluida basada en las capacidades motrices humanas naturales.
 
 \subsection{Objetivos}
-\begin{itemize}
-    \item Implementar un sistema de reconocimiento de gestos robusto utilizando técnicas de aprendizaje automático (Machine Learning).
-    \item Desarrollar una lógica de juego interactiva que responda en tiempo real a las acciones del usuario.
-    \item Integrar librerías de visión por computador como OpenCV y MediaPipe para la extracción de características.
-    \item Entrenar clasificadores neuronales (MLP) para distinguir entre diferentes gestos (cara y manos).
-\end{itemize}
+Los objetivos principales del proyecto son:
+\begin{enumerate}
+    \item \textbf{Implementar un sistema de reconocimiento de gestos robusto}: Utilizando técnicas de aprendizaje automático (Machine Learning) para identificar patrones en tiempo real.
+    \item \textbf{Desarrollar una lógica de juego interactiva}: Crear una máquina de estados que gestione la fluidez del juego, desde el menú hasta la detección de movimientos y la respuesta auditiva/visual.
+    \item \textbf{Integración tecnológica eficiente}: Combinar librerías de visión por computador (OpenCV, MediaPipe) con síntesis de voz y audio para una experiencia multimedia completa.
+    \item \textbf{Entrenamiento de modelos personalizados}: Crear y entrenar clasificadores neuronales (MLP) capaces de distinguir entre diferentes gestos faciales (ojos cerrados, movimientos de cabeza) y manuales (puño, mano abierta, pulgar arriba, etc.).
+\end{enumerate}
 
 \newpage
 
 % 2. TECNOLOGÍAS UTILIZADAS
 \section{Tecnologías y herramientas}
 
-Para el desarrollo de este proyecto se ha utilizado un stack tecnológico basado en Python, aprovechando su extenso ecosistema para ciencia de datos y visión artificial.
+Para el desarrollo de este proyecto se ha utilizado un stack tecnológico basado en Python, aprovechando su extenso ecosistema para ciencia de datos, visión artificial y desarrollo de videojuegos.
 
 \subsection{Lenguaje y entorno}
 \begin{itemize}
     \item \textbf{Python 3.11}: Lenguaje principal del proyecto.
-    \item \textbf{Conda}: Gestor de entornos utilizado para aislar las dependencias (entorno \texttt{VC\_Trabajo} o \texttt{memo\_env}).
+    \item \textbf{Conda}: Gestor de entornos utilizado para aislar las dependencias.
     \item \textbf{Jupyter Notebooks}: Utilizados para el prototipado, generación de datasets y entrenamiento de modelos.
 \end{itemize}
 
 \subsection{Librerías principales}
 \begin{itemize}
-    \item \textbf{OpenCV (cv2)}: Herramienta fundamental para la captura de vídeo desde la webcam, procesamiento de imágenes (cambios de espacio de color BGR a RGB) y visualización en tiempo real.
-    \item \textbf{MediaPipe}: Framework desarrollado por Google, utilizado para la detección de hitos (landmarks) faciales y manuales. Específicamente se usan los módulos \texttt{FaceMesh} (malla facial) y \texttt{Hands} (detección de manos).
-    \item \textbf{Scikit-Learn}: Utilizada para la implementación de algoritmos de Machine Learning. En concreto, se ha empleado el \texttt{MLPClassifier} (Perceptrón Multicapa) para la clasificación de los gestos basándose en los landmarks extraídos.
-    \item \textbf{NumPy}: Para operaciones matemáticas eficientes y manipulación de arrays, crucial para la normalización de coordenadas.
-    \item \textbf{Pickle}: Para la serialización y guardado de los modelos entrenados (\texttt{.pkl}).
+    \item \textbf{OpenCV (cv2)}: Herramienta fundamental para la captura de vídeo desde la webcam, preprocesamiento de imágenes (flip, conversión de color) y visualización de la interfaz básica.
+    \item \textbf{MediaPipe}: Framework desarrollado por Google. Se utilizan los módulos:
+    \begin{itemize}
+        \item \texttt{FaceMesh}: Para generar una malla facial de 468 puntos y detectar gestos de la cabeza y ojos.
+        \item \texttt{Hands}: Para detectar 21 puntos clave en las manos y reconocer posturas complejas.
+    \end{itemize}
+    \item \textbf{Scikit-Learn}: Librería de ML utilizada para implementar el \texttt{MLPClassifier} (Perceptrón Multicapa), responsable de clasificar los vectores de características en gestos concretos.
+    \item \textbf{NumPy}: Esencial para operaciones matemáticas vectoriales, normalización de coordenadas y manipulación de arrays.
+    \item \textbf{Pickle}: Para la serialización (guardado) y carga de los modelos entrenados (\texttt{.pkl}).
+    \item \textbf{Pygame}: Utilizada para la gestión de efectos de sonido (feedback de acierto/error) en el juego.
+    \item \textbf{Pyttsx3}: Librería de síntesis de voz (Text-to-Speech) que permite al juego "hablar" las instrucciones al jugador (ej. "Simón dice: Levanta la mano").
+    \item \textbf{Pillow (PIL)}: Utilizada para renderizar texto con caracteres UTF-8 (como tildes o la 'ñ') en los frames de OpenCV, ya que la fuente por defecto de OpenCV tiene limitaciones con estos caracteres.
 \end{itemize}
 
 \newpage
@@ -146,73 +154,94 @@ El proyecto se organiza en la siguiente estructura de directorios, separando el 
 
 % 4. METODOLOGÍA Y DESARROLLO
 \section{Metodología y desarrollo}
+El desarrollo se ha estructurado en tres fases secuenciales: generación del dataset, entrenamiento de los modelos clasificadores y desarrollo de la lógica del juego.
 
-El proyecto se divide en tres fases principales: generación del dataset, entrenamiento de modelos y lógica del juego.
-\subsection{Fase 1: Generación del dataset}
-Para la construcción del \textit{dataset}, inicialmente se realizó una búsqueda de imágenes en repositorios públicos como Kaggle. Se identificaron conjuntos de datos relevantes, tales como:
+\subsection{Fase 1: Recolección del dataset}
+Para entrenar un modelo robusto, es esencial contar con datos de calidad. Por ello, para construir el textit{dataset}, inicialmente se realizó una búsqueda de imágenes en repositorios públicos como Kaggle. Se identificaron conjuntos de datos relevantes, tales como:
 \begin{itemize}
     \item \href{https://www.kaggle.com/datasets/ahamedfarouk/cew-dataset}{CEW Dataset} (Closed Eyes in the Wild), útil para la detección de ojos cerrados.
     \item \href{https://www.kaggle.com/datasets/innominate817/hagrid-sample-30k-384p}{HaGRID} (HAnd Gesture Recognition Image Dataset), para el reconocimiento de posturas de la mano.
 \end{itemize}
 
-Sin embargo, para adaptar el sistema a las necesidades específicas del juego y mejorar la robustez ante el entorno real de uso, se desarrolló un código específico para enriquecer el conjunto de datos. Mediante los scripts \texttt{GuardarGestosCara.ipynb} y \texttt{GuardarGestosManoCuerpo.ipynb}, se capturaron imágenes propias utilizando la webcam, almacenándolas en carpetas etiquetadas para complementar las muestras obtenidas de fuentes externas.
+Sin embargo, para adaptar el sistema a las necesidades específicas del juego y mejorar la robustez ante el entorno real de uso, se desarrollaron dos scripts en Python que permiten capturar imágenes de la webcam sistemáticamente para enriquecer el conjunto de datos.
 
-Las clases definidas para el reconocimiento incluyen:
 \begin{itemize}
-    \item \textbf{Gestos faciales}: Neutro, ojos cerrados, cabeza derecha y cabeza izquierda.
-    \item \textbf{Gestos manuales}: Mano arriba (izquierda/derecha), puños cerrados, pulgar arriba, señal de victoria, gesto de rock, llamada y OK.
+    \item El sistema captura ráfagas de imágenes mientras el usuario realiza un gesto específico.
+    \item Las imágenes se guardan automáticamente en carpetas etiquetadas con el nombre del gesto (ej. \texttt{dataset/gestos\_manos/4\_Pulgar\_Arriba}).
+    \item Se capturaron múltiples variaciones de cada gesto (diferentes distancias, manos izquierda/derecha, ligeras rotaciones) para mejorar la generalización.
 \end{itemize}
 
-\subsection{Fase 2: Procesamiento y entrenamiento}
-El entrenamiento se realiza en los notebooks \texttt{EntrenoCara.ipynb} y \texttt{EntrenoManoCuerpo.ipynb}. El flujo de trabajo es el siguiente:
-
-En lugar de procesar la imagen cruda (píxeles), lo cual sería costoso computacionalmente y propenso a errores por cambios de iluminación, se utilizan los \textbf{landmarks} (puntos clave) de MediaPipe. Esta decisión permite una inferencia mucho más rápida, esencial para la fluidez del juego.
+Las clases definidas incluyen:
 \begin{itemize}
-    \item \textbf{Malla facial (Face Mesh)}: Genera una malla densa de 468 puntos tridimensionales que mapean la superficie del rostro. Esto permite detectar sutilezas como el cierre de los ojos o la rotación de la cabeza con gran precisión.
-    \item \textbf{Manos (Hands)}: Identifica 21 puntos clave por cada mano, incluyendo muñeca y falanges de cada dedo. La topología de esqueleto permite inferir gestos complejos independientemente del tamaño de la mano del usuario.
+    \item \textbf{Faciales}: Neutro, Ojos Cerrados, Cabeza Derecha, Cabeza Izquierda.
+    \item \textbf{Manuales}: Mano Arriba, Puños Cerrados, Pulgar Arriba, Victoria, Rock, Llamada, OK.
 \end{itemize}
 
-\subsubsection{Preprocesamiento y normalización}
-Los puntos extraídos ($x, y, z$) se normalizan para que el modelo sea invariante a la posición del usuario en la pantalla y a la distancia a la cámara.
-\begin{lstlisting}[language=Python, caption=Función de normalización]
-def normalizar_puntos(landmarks):
-    coords = np.array([[lm.x, lm.y] for lm in landmarks])
-    centroid = np.mean(coords, axis=0) # Centrar
-    centered = coords - centroid
-    max_dist = np.max(np.abs(centered)) # Escalar
-    return (centered / max_dist).flatten()
-\end{lstlisting}
-
-\subsubsection{Data augmentation (aumento de datos)}
-Para mejorar la robustez del modelo con pocos datos, se generan variaciones sintéticas de cada muestra original:
+\subsection{Fase 2: Entrenamiento (método y cómo)}
+El entrenamiento se llevó a cabo en los notebooks:
 \begin{itemize}
-    \item \textbf{Ruido Gaussiano}: Simula imperfecciones en la detección.
-    \item \textbf{Escalado}: Simula ligeros acercamientos o alejamientos.
-    \item \textbf{Rotación}: Simula inclinaciones de la cabeza o mano.
+    \item \texttt{EntrenoCara.ipynb}
+    \item \texttt{EntrenoManoCuerpo.ipynb}
 \end{itemize}
+La metodología empleada se basa en el aprendizaje supervisado sobre características geométricas.
 
-\subsubsection{Modelo de clasificación}
-Se utiliza una red neuronal artificial (MLP).
-\begin{itemize}
-    \item \textbf{Arquitectura cara}: Capas ocultas de (128, 64) neuronas.
-    \item \textbf{Arquitectura manos}: Capas ocultas de (64, 32) neuronas.
-    \item \textbf{Validación}: Se utiliza Cross-Validation (K-Fold estratificado) para asegurar que el modelo generaliza correctamente, obteniendo altas tasas de precisión en las pruebas.
-\end{itemize}
-
-\subsection{Fase 3: Lógica del juego (Simon Says)}
-El núcleo del juego se encuentra en \texttt{src/game/game.ipynb}. El sistema funciona como una máquina de estados:
+\subsubsection{Extracción de características}
+En lugar de utilizar redes neuronales convolucionales (CNN) que procesan la imagen completa (pixel a pixel), se optó por un enfoque basado en \textbf{landmarks} (puntos clave).
 \begin{enumerate}
-    \item \textbf{Generación de secuencia}: El sistema elige una serie de gestos aleatorios.
-    \item \textbf{Muestra}: Se indica al usuario qué gestos debe realizar (mediante texto o iconos en pantalla).
-    \item \textbf{Escucha (inferencia)}: Se activa la cámara y el modelo predice en tiempo real qué gesto está haciendo el usuario.
-    \item \textbf{Validación}: Si el gesto coincide con el esperado en la secuencia, se avanza. Si falla o tarda demasiado, pierde.
+    \item Se procesa cada imagen del dataset con MediaPipe.
+    \item Se extraen las coordenadas $(x, y, z)$ de los puntos de interés (468 para cara, 21 para mano).
+    \item \textbf{Normalización}: Crucial para que el modelo funcione independientemente de la posición del usuario en la pantalla. Se centra el gesto restando el centroide y se escala dividiendo por la máxima distancia absoluta desde el centro.
 \end{enumerate}
 
-\textbf{Mecánicas adicionales:}
+\subsubsection{Aumento de datos (data augmentation)}
+Dado que el dataset propio es limitado en tamaño, se aplicaron técnicas de aumento de datos sintético sobre los vectores de características (no sobre las imágenes), lo cual es muy eficiente:
 \begin{itemize}
-    \item \textbf{Trampa <<Simón Dice>>}: El juego puede intentar engañar al usuario mostrando instrucciones con un nombre diferente (ej. <<Modesto dice>>). Si el usuario realiza el gesto cuando no lo dijo <<Simón>>, pierde.
-    \item \textbf{Dificultad incremental}: Aumenta la longitud de la secuencia y disminuye el tiempo permitido por ronda.
+    \item \textbf{Ruido}: Se añade ruido gaussiano aleatorio a las coordenadas para simular el "jitter" de la cámara.
+    \item \textbf{Escalado y rotación}: Se aplican transformaciones matriciales 2D para simular que el usuario está más cerca/lejos o inclina la mano.
 \end{itemize}
+
+\subsubsection{Clasificación con MLP}
+Se entrenaron dos modelos \texttt{MLPClassifier} (Multi-Layer Perceptron) independientes:
+\begin{itemize}
+    \item \textbf{Modelo facial}: Arquitectura (128, 64). Capaz de detectar sutilezas como el parpadeo.
+    \item \textbf{Modelo manual}: Arquitectura (64, 32). Suficiente para distinguir posturas de dedos.
+\end{itemize}
+Los modelos alcanzaron una precisión superior al 95\% en el conjunto de validación y se exportaron como archivos \texttt{.pkl} para su uso en producción.
+
+\subsection{Fase 3: Desarrollo del juego (\texttt{src/game/codigo.py})}
+La lógica principal del juego reside en el archivo \texttt{src/game/codigo.py}. El juego está implementado como una clase \texttt{SimonGame} que orquesta la captura de vídeo, la inferencia de modelos y la interacción con el usuario.
+
+\subsubsection{Máquina de estados}
+Para gestionar el flujo del juego, se implementó una máquina de estados finitos:
+\begin{enumerate}
+    \item \textbf{MENU}: Pantalla de inicio esperando que el jugador pulse espacio.
+    \item \textbf{SHOW\_NEW\_STEP}: El turno de la CPU. El sistema:
+    \begin{itemize}
+        \item Añade un nuevo paso a la secuencia.
+        \item Utiliza \textbf{Pyttsx3} para verbalizar el comando (ej. "Simón dice: Victoria").
+        \item Muestra texto en pantalla usando \textbf{Pillow} para renderizar una tipografía personalizada.
+    \end{itemize}
+    \item \textbf{WAIT\_NEUTRAL}: Estado intermedio que obliga al jugador a volver a una posición neutra. Esto evita que el sistema detecte erróneamente el gesto anterior como el inicio del nuevo.
+    \item \textbf{PLAYER\_TURN}: El jugador debe repetir la secuencia. El sistema valida en tiempo real si el gesto detectado coincide con el esperado.
+    \item \textbf{GAMEOVER} / \textbf{SUCCESS}: Estados finales de ronda.
+\end{enumerate}
+
+\subsubsection{Niveles de dificultad y trampas}
+Una característica clave implementada en el código es la lógica de "trampas", inspirada en el juego real:
+\begin{itemize}
+    \item \textbf{Nivel básico}: El juego siempre dice ``Simón dice...''.
+    \item \textbf{Nivel intermedio}: Aparecen comandos como ``Modesto dice...'' El jugador \textbf{no} debe realizar el gesto. Si se mueve, pierde.
+    \item \textbf{Nivel avanzado}: Se omiten palabras clave ("Simón...", "Dice...").
+\end{itemize}
+Esta lógica se gestiona mediante la función \texttt{add\_sequence\_step}, que genera aleatoriamente instrucciones válidas o trampas según la puntuación actual.
+
+\subsubsection{Feedback Multimedia}
+El juego no solo es visual, sino que integra audio para mejorar la experiencia:
+\begin{itemize}
+    \item \textbf{Voz}: El motor TTS narra las acciones.
+    \item \textbf{Efectos}: Se utiliza \texttt{pygame.mixer} para reproducir sonidos de éxito o error inmediatamente tras la acción del jugador.
+\end{itemize}
+
 
 \newpage
 
@@ -229,6 +258,10 @@ Los algoritmos de detección visual son sensibles a las condiciones de luz extre
 En ocasiones, al realizar gestos cerca de la cara, las manos pueden ocultar partes del rostro, confundiendo al detector facial. \\
 \textbf{Solución}: Se implementó una lógica de priorización en el bucle principal del juego y se ajustaron los umbrales de confianza (\texttt{min\_detection\_confidence}) para reducir falsos positivos.
 
+\subsection{Renderizado de Texto}
+OpenCV no soporta caracteres UTF-8 nativamente, lo que impedía escribir ``Simón'' o ``Puño'' correctamente. \\
+\textbf{Solución}: Se creó la función auxiliar \texttt{poner\_texto\_utf8} que convierte el frame a formato PIL Image, dibuja el texto con una fuente TrueType (.otf) personalizada y lo reconvierte a OpenCV.
+
 \subsection{Latencia en tiempo real}
 El procesamiento de vídeo requiere un alto rendimiento para no afectar a la jugabilidad. \\
 \textbf{Solución}: El uso de clasificadores MLP (redes neuronales simples) sobre vectores de características ligeros, en lugar de redes convolucionales profundas (CNN) sobre imágenes completas, garantiza una tasa de fotogramas (FPS) alta incluso en equipos con hardware modesto.
@@ -241,20 +274,26 @@ El procesamiento de vídeo requiere un alto rendimiento para no afectar a la jug
 \subsection{Requisitos previos}
 Es necesario disponer de una webcam funcional y un entorno con las librerías instaladas:
 \begin{verbatim}
-pip install opencv-python numpy mediapipe scikit-learn
+pip install opencv-python numpy mediapipe scikit-learn pygame pyttsx3 pillow
 \end{verbatim}
 
 \subsection{Ejecución}
-1. Abrir el proyecto en un editor compatible con Jupyter Notebooks (VS Code o Jupyter Lab).
-2. Ejecutar el archivo principal del juego: \texttt{src/game/game.ipynb}.
-3. Seguir las instrucciones en pantalla.
+\begin{enumerate}
+    \item Abrir la terminal en la carpeta \texttt{src/game/}.
+    \item Ejecutar el archivo principal del juego: \texttt{python codigo.py}.
+    \item Seguir las instrucciones en pantalla y audio.
+\end{enumerate}
 
 \subsection{Cómo jugar}
 \begin{enumerate}
-    \item El juego mostrará una secuencia de acciones (ej. <<Cerrar Ojos>>, <<Mano Arriba>>).
-    \item Memoriza la secuencia.
-    \item Cuando sea tu turno, repite los gestos frente a la cámara en el mismo orden.
-    \item ¡Cuidado! Si la instrucción no empieza por <<Simón dice>> (o la indicación visual correspondiente), no debes moverte.
+    \item \textbf{Atención}: El juego te hablará y mostrará texto.
+    \item \textbf{Ordenes Válidas}: Si dice ``Simón dice: [Acción]'', debes imitar el gesto.
+    \item \textbf{Trampas}: 
+    \begin{itemize}
+        \item Si dice ``Modesto dice...'' o no menciona a ``Simón'', ¡No te muevas!
+        \item Mantén la posición neutra hasta que pase la ronda.
+    \end{itemize}
+    \item \textbf{Secuencia}: Debes memorizar y repetir todos los pasos acumulados.
 \end{enumerate}
 
 \newpage
@@ -263,7 +302,7 @@ pip install opencv-python numpy mediapipe scikit-learn
 \section{Conclusiones}
 Este proyecto demuestra la viabilidad de crear interfaces hombre-máquina naturales y accesibles utilizando hardware de consumo estándar (webcam). La combinación de la extracción de características geométricas (mediante MediaPipe) con clasificadores ligeros (MLP) permite una inferencia en tiempo real extremadamente rápida, adecuada para videojuegos.
 
-El uso de técnicas como la normalización de coordenadas y el aumento de datos ha sido crucial para obtener un sistema robusto que funcione con diferentes usuarios y condiciones de iluminación.
+La integración de feedback multimedia (voz y sonido) enriquece significativamente la experiencia de usuario, haciendo el juego más dinámico y accesible. El uso de técnicas como la normalización de coordenadas y el aumento de datos ha sido crucial para obtener un sistema robusto.
 
 \newpage
 
@@ -273,7 +312,8 @@ El uso de técnicas como la normalización de coordenadas y el aumento de datos 
     \item Documentación de OpenCV: \url{https://docs.opencv.org/}
     \item MediaPipe Solutions: \url{https://google.github.io/mediapipe/}
     \item Scikit-Learn Documentation: \url{https://scikit-learn.org/stable/}
-    \item Ultralytics YOLO (referencia conceptual): \url{https://github.com/ultralytics/ultralytics}
+    \item Pygame Documentation: \url{https://www.pygame.org/docs/}
+    \item Pyttsx3 Project: \url{https://pypi.org/project/pyttsx3/}
 \end{itemize}
 
 \end{document}
