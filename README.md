@@ -110,5 +110,6 @@ El motivo por el que se han fijado versiones para los diversos paquetes empleado
   
 > Uso de la IA
 - Explicación de algunas funciones
-- Ayuda con gestión de ciertas librerías
+- Ayuda con la gestión de ciertas librerías
+- Guía para mejorar la interfaz de usuario
 - Estructura y redacción del Readme
