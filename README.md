@@ -38,7 +38,7 @@ El trabajo no dependerá de ninguna base de datos externa; se basará en un data
 ---
 ## Contenidos
 - [Librerías utilizadas](#librerias)
- 
+- [Acceso directo a la memoria (redacta con LaTeX)]()
 ---
   
 <a name="librerias"></a>
@@ -106,8 +106,10 @@ pip install numpy==2.2.6 opencv-contrib-python==4.12.0.88 mediapipe==0.10.14 sci
 pip install matplotlib==3.10.7 pygame==2.6.1 sounddevice==0.5.3 pyttsx3==2.99
 pip install pillow jax jaxlib ipykernel
 ```
-El motivo por el que se han fijado versiones para los diversos paquetes empleados en este proyecto, viene dada por la incompatibilidad entre los mismos que derivaba de manera directa en la imposibilidad de ejecución del código del juego. 
-  
+El motivo por el que se han fijado versiones para los diversos paquetes empleados en este proyecto, viene dada por la incompatibilidad entre los mismos que derivaba de manera directa en la imposibilidad de ejecución del código del juego.  
+
+---
+
 > Uso de la IA
 - Explicación de algunas funciones
 - Ayuda con la gestión de ciertas librerías
