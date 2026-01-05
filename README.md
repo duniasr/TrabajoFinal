@@ -43,59 +43,71 @@ El trabajo no dependerá de ninguna base de datos externa; se basará en un data
   
 <a name="librerias"></a>
 ## Librerías utilizadas
-[![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)  
-- Framework principal para entrenamiento de modelos YOLO.  
-- Soporte de GPU mediante CUDA para acelerar el entrenamiento.  
-- Incluye módulos como `torchvision` y `torchaudio` para manipulación de datos multimodales.  
-
-[![CUDA](https://img.shields.io/badge/CUDA-%230edc0f?style=for-the-badge&logo=nvidia&logoColor=white)](https://developer.nvidia.com/cuda-zone)  
-- Librería de aceleración por GPU utilizada por PyTorch.  
-
-[![Ultralytics YOLO](https://img.shields.io/badge/Ultralytics%20YOLO-%23FF6F61?style=for-the-badge&logo=ultralytics&logoColor=white&labelColor=%23FF6F61)](https://github.com/ultralytics/ultralytics)
-- Implementación moderna de YOLO (YOLOv11).  
-- Facilita entrenamiento, validación y detección de objetos con modelos preentrenados y personalizados.  
-
-[![LabelMe](https://img.shields.io/badge/LabelMe-%23F6A623?style=for-the-badge&logo=labelme&logoColor=white)](https://github.com/wkentaro/labelme)  
-- Herramienta gráfica para anotación de imágenes.  
-- Generar archivos `.json` con las coordenadas de objetos (matrículas).  
-
-[![lap](https://img.shields.io/badge/lap-%23007ACC?style=for-the-badge)](https://pypi.org/project/lap/)  
-- Librería para resolver problemas de asignación lineal, útil en seguimiento de objetos.  
+[![NumPy](https://img.shields.io/badge/NumPy-%23013243?style=for-the-badge&logo=numpy&logoColor=white)](https://numpy.org/)  
+- Manipulación eficiente de arrays y operaciones matemáticas.  
+- Soporte de cálculos matriciales y transformaciones de imágenes. 
 
 [![OpenCV](https://img.shields.io/badge/OpenCV-%23127C71?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)  
 - Procesamiento de imágenes y videos.  
-- Lectura/escritura de videos, manipulación de frames, recorte de ROI, anotaciones gráficas.  
+- Lectura/escritura de videos, manipulación de frames, recorte de ROI, anotaciones gráficas.    
 
-[![NumPy](https://img.shields.io/badge/NumPy-%23013243?style=for-the-badge&logo=numpy&logoColor=white)](https://numpy.org/)  
-- Manipulación eficiente de arrays y operaciones matemáticas.  
-- Soporte de cálculos matriciales y transformaciones de imágenes.  
+[![MediaPipe](https://img.shields.io/badge/MediaPipe-blue?style=for-the-badge&logo=google&logoColor=white)](https://mediapipe.dev/)
+- Detección y seguimiento de manos, de rostro y del cuerpo mediante modelos preentrenados.
+- Extracción de landmarks para análisis de gestos y control por visión artificial.  
 
-[![Pandas](https://img.shields.io/badge/Pandas-%23150458?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org/)  
-- Almacenamiento y manejo de datos en formato tabular.  
-- Exportación de resultados a CSV para análisis posterior.  
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-orange?style=for-the-badge&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
+- Algoritmos de aprendizaje automático y de clasificación.
+- Entrenamiento y evaluación de modelos para la toma de decisiones basada en datos.  
 
-[![Pytesseract](https://img.shields.io/badge/Pytesseract-%23000000?style=for-the-badge&logo=python&logoColor=white)](https://pypi.org/project/pytesseract/)  
-- Wrapper de Tesseract OCR para Python.  
-- Permite reconocimiento de texto en imágenes, especialmente matrículas.  
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-%2311557C?style=for-the-badge&logo=matplotlib&logoColor=white)](https://matplotlib.org/)
+- Visualización de datos y resultados experimentales.
+- Representación gráfica de señales, métricas y estadísticas del sistema.  
 
-[![EasyOCR](https://img.shields.io/badge/EasyOCR-%23FF4F00?style=for-the-badge&logo=python&logoColor=white)](https://www.jaided.ai/easyocr/)  
-- OCR moderno basado en redes neuronales profundas.  
-- Reconocimiento de caracteres en imágenes con buena velocidad y estabilidad.  
+[![Pygame](https://img.shields.io/badge/Pygame-%232E8B57?style=for-the-badge&logo=pygame&logoColor=white)](https://www.pygame.org/)
+- Desarrollo de interfaces gráficas y aplicaciones interactivas.
+- Gestión de eventos, ventanas y elementos multimedia en tiempo real.
+
+[![SoundDevice](https://img.shields.io/badge/SoundDevice-%234B8BBE?style=for-the-badge&logo=python&logoColor=white)](https://python-sounddevice.readthedocs.io/)
+- Captura y reproducción de audio en tiempo real.
+- Entrada de micrófono para control por voz o análisis sonoro.
+
+[![pyttsx3](https://img.shields.io/badge/pyttsx3-%23800080?style=for-the-badge&logo=python&logoColor=white)](https://pyttsx3.readthedocs.io/)
+- Conversión de texto a voz sin conexión a internet.
+- Generación de feedback sonoro y mensajes descritos para el usuario.
+
+[![Pillow](https://img.shields.io/badge/Pillow-%23E34F26?style=for-the-badge&logo=python&logoColor=white)]()
+- Carga, procesamiento y conversión de imágenes.
+- Soporte para distintos formatos y manipulación básica de imágenes.
+
+[![JAX](https://img.shields.io/badge/JAX-%23000000?style=for-the-badge&logo=jax&logoColor=white)](https://jax.readthedocs.io/)
+- Computación numérica acelerada y diferenciación automática.
+- Optimización de operaciones matemáticas avanzadas y cálculo eficiente.
+
+[![JAXlib](https://img.shields.io/badge/JAXlib-%23663399?style=for-the-badge&logo=python&logoColor=white)](https://github.com/google/jax)
+- Backend de bajo nivel para JAX.
+- Ejecución eficiente en CPU/GPU de operaciones matemáticas.
+
+[![ipykernel](https://img.shields.io/badge/ipykernel-purple?style=for-the-badge&logo=jupyter&logoColor=white)](https://ipython.org/)
+- Integración del entorno Python con Jupyter Notebook.
+- Facilita el desarrollo, pruebas y documentación interactiva del proyecto.
 
 [![Time](https://img.shields.io/badge/Time-%23000000?style=for-the-badge&logo=python&logoColor=white)](https://docs.python.org/3/library/time.html)  
-- Medición de tiempos de inferencia y procesamiento frame a frame.
+- Medición de tiempos de inferencia y procesamiento frame a frame.  
+
 --- 
 
 <a name="entorno"></a>
 ### 🖥️ Preparación del entorno
-Para garantizar la correcta ejecución del memorizador *Simón dice*, es necesario configurar un entorno de Python con las librerías requeridas. Este entorno incluye herramientas para procesamiento y análisis de información biométrica. Para ello, se creó un nuevo entorno de **Conda** con Python *3.11.5*:
+Para garantizar la correcta ejecución del memorizador *Simón dice*, es necesario configurar un entorno de Python con las librerías requeridas. Este entorno incluye herramientas para procesamiento y análisis de información biométrica. Para ello, se creó un nuevo entorno de **Conda** con Python *3.11*:
 ```bash
-conda create --name VC_Trabajo python=3.11.5
+conda create --name VC_Trabajo python=3.11
 conda activate VC_Trabajo
-pip install opencv-python numpy
+pip install numpy==2.2.6 opencv-contrib-python==4.12.0.88 mediapipe==0.10.14 scikit-learn==1.7.2
+pip install matplotlib==3.10.7 pygame==2.6.1 sounddevice==0.5.3 pyttsx3==2.99
+pip install pillow jax jaxlib ipykernel
 ```
+El motivo por el que se han fijado versiones para los diversos paquetes empleados en este proyecto, viene dada por la incompatibilidad entre los mismos que derivaba de manera directa en la imposibilidad de ejecución del código del juego. 
   
-
 > Uso de la IA
 - Explicación de algunas funciones
 - Ayuda con gestión de ciertas librerías
