@@ -38,7 +38,7 @@ El trabajo no dependerá de ninguna base de datos externa; se basará en un data
 ---
 ## Contenidos
 - [Librerías utilizadas](#librerias)
-- [Acceso directo a la memoria (redacta con LaTeX)]()
+- [Acceso directo a la memoria (redacta con LaTeX)](src/memory/Memoria.pdf)
 ---
   
 <a name="librerias"></a>
