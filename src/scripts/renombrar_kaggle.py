@@ -35,7 +35,6 @@ def renombrar_imagenes():
         cant = len(archivos)
         print(f"  -> Procesando '{carpeta}': {cant} imágenes únicas.")
         
-        # 2. Paso intermedio: Renombrar a temporal para evitar conflictos
         temp_map = [] # [(ruta_temp, extension)]
         
         for ruta_antigua in archivos:
@@ -52,7 +51,7 @@ def renombrar_imagenes():
             except OSError as e:
                 print(f"    Error renombrando a temp {nombre_archivo}: {e}")
 
-        # 3. Paso final: Renombrar secuencialmente 1..N
+        # Renombrar imágenes secuencialmente
         for i, (ruta_temp, extension) in enumerate(temp_map, 1):
             if extension.lower() == '.jpeg': extension = '.jpg'
             
@@ -67,7 +66,7 @@ def renombrar_imagenes():
     print("\n--- COMPLETADO ---")
 
 if __name__ == "__main__":
-    print("Este script renombrará las imágenes al formato: Carpeta_Kaggle_N.jpg (1 al Total)")
+    print("Este script renombrará las imágenes al formato: Carpeta_Kaggle_N.jpg (1 hasta el total)")
     confirm = input(f"Ruta objetivo: {DATASET_PATH}\n¿Continuar? (s/n): ")
     if confirm.lower() == 's':
         renombrar_imagenes()
