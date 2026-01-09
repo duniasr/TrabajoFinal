@@ -94,7 +94,7 @@ Los objetivos principales del proyecto son:
 \begin{enumerate}
     \item \textbf{Implementar un sistema de reconocimiento de gestos robusto}: Utilizando técnicas de aprendizaje automático (Machine Learning) para identificar patrones en tiempo real.
     \item \textbf{Desarrollar una lógica de juego interactiva}: Crear una máquina de estados que gestione la fluidez del juego, desde el menú hasta la detección de movimientos y la respuesta auditiva/visual.
-    \item \textbf{Integración tecnológica eficiente}: Combinar librerías de visión por computador (OpenCV, MediaPipe) con síntesis de voz y audio para una experiencia multimedia completa.
+    \item \textbf{Integración tecnológica eficiente}: Combinar librerías de visión por computador (OpenCV, MediaPipe) con un sistema de audio personalizado para una experiencia multimedia completa.
     \item \textbf{Entrenamiento de modelos personalizados}: Crear y entrenar clasificadores neuronales (MLP) capaces de distinguir entre diferentes gestos faciales (ojos cerrados, movimientos de cabeza) y manuales (puño, mano abierta, pulgar arriba, etc.).
 \end{enumerate}
 
@@ -123,8 +123,8 @@ Para el desarrollo de este proyecto se ha utilizado un stack tecnológico basado
     \item \textbf{Scikit-Learn}: Librería de ML utilizada para implementar el \texttt{MLPClassifier} (Perceptrón Multicapa), responsable de clasificar los vectores de características en gestos concretos.
     \item \textbf{NumPy}: Esencial para operaciones matemáticas vectoriales, normalización de coordenadas y manipulación de arrays.
     \item \textbf{Pickle}: Para la serialización (guardado) y carga de los modelos entrenados (\texttt{.pkl}).
-    \item \textbf{Pygame}: Utilizada para la gestión de efectos de sonido (feedback de acierto/error) en el juego.
-    \item \textbf{Pyttsx3}: Librería de síntesis de voz (Text-to-Speech) que permite al juego "hablar" las instrucciones al jugador (ej. "Simón dice: Levanta la mano").
+    \item \textbf{Pygame}: Utilizada para la gestión de efectos de sonido (feedback de acierto/error) en el juego y narración de instrucciones.
+
     \item \textbf{Pillow (PIL)}: Utilizada para renderizar texto con caracteres UTF-8 (como tildes o la 'ñ') en los frames de OpenCV, ya que la fuente por defecto de OpenCV tiene limitaciones con estos caracteres.
 \end{itemize}
 
@@ -136,18 +136,22 @@ El proyecto se organiza en la siguiente estructura de directorios, separando el 
 
 \begin{verbatim}
 /
-|-- dataset/                # Imágenes para entrenamiento
-|   |-- gestos_cara/        # Dataset de gestos faciales
-|   |-- gestos_manos/       # Dataset de gestos manuales
+|-- dataset/                                # Imágenes para entrenamiento
+|   |-- gestos_cara/                        # Dataset de gestos faciales
+|   |-- gestos_manos/                       # Dataset de gestos manuales
+|               
+|-- src/                                    # Código fuente del proyecto
+|   |-- game/                               # Lógica del juego (Simon Says)
+        |-- fonts/                          # Fuentes para renderizar texto en OpenCV
+        |-- instructions/                   # Audios para la narración de instrucciones
+        |-- sounds/                         # Sonidos para feedback de acierto/error
+        |-- game_multijugador.ipynb         # Jupyter Notebook principal
+|   |-- generate_images/                    # Scripts para captura de datos
+|   |-- memory/                             # Documentación LaTeX
+|   |-- scripts/                            # Utilidades auxiliares
+|   |-- train/                              # Notebooks de entrenamiento (MLP)
 |
-|-- src/                    # Código fuente del proyecto
-|   |-- game/               # Lógica del juego (Simon Says)
-|   |-- generate_images/    # Scripts para captura de datos
-|   |-- memory/             # Documentación LaTeX
-|   |-- scripts/            # Utilidades auxiliares
-|   |-- train/              # Notebooks de entrenamiento (MLP)
-|
-|-- README.md               # Documentación general y setup
+|-- README.md                               # Documentación general y setup
 \end{verbatim}
 
 \newpage
@@ -208,26 +212,41 @@ Se entrenaron dos modelos \texttt{MLPClassifier} (Multi-Layer Perceptron) indepe
 \end{itemize}
 Los modelos alcanzaron una precisión superior al 95\% en el conjunto de validación y se exportaron como archivos \texttt{.pkl} para su uso en producción.
 
-\subsection{Fase 3: Desarrollo del juego (\texttt{src/game/codigo.py})}
-La lógica principal del juego reside en el archivo \texttt{src/game/codigo.py}. El juego está implementado como una clase \texttt{SimonGame} que orquesta la captura de vídeo, la inferencia de modelos y la interacción con el usuario.
+\subsection{Fase 3: Desarrollo del juego}
+La lógica principal del juego reside en el archivo principal (\texttt{src/game/game\_multijugador.ipynb}). El juego está implementado utilizando programación orientada a objetos para permitir la escalabilidad hacia múltiples jugadores.
+
+\subsubsection{Arquitectura y Clase Jugador}
+Se ha introducido la clase \texttt{Player} para gestionar el estado individual de cada participante. Esta clase encapsula:
+\begin{itemize}
+    \item \textbf{Identificación}: ID, nombre y límites de pantalla asignados (bounds) para dividir el área de detección en el modo dos jugadores.
+    \item \textbf{Estado del juego}: Vidas restantes, estado de eliminación y progreso en la ronda actual.
+    \item \textbf{Detección}: Gesto actual detectado, contadores de estabilidad (frames consecutivos) y tiempos de reacción.
+\end{itemize}
+
+Esta estructura permite que el juego gestione dos versiones:
+\begin{enumerate}
+    \item \textbf{Un Jugador}: El usuario ocupa toda la pantalla. La lógica se centra en superar la secuencia creciente.
+    \item \textbf{Dos Jugadores (VS)}: La pantalla se divide en dos secciones. Ambos jugadores compiten simultáneamente para completar la misma instrucción. El sistema penaliza individualmente los fallos o la falta de rapidez.
+\end{enumerate}
 
 \subsubsection{Máquina de estados}
-Para gestionar el flujo del juego, se implementó una máquina de estados finitos:
+Para gestionar el flujo del juego, se implementó una máquina de estados finitos mejorada:
 \begin{enumerate}
-    \item \textbf{MENU}: Pantalla de inicio esperando que el jugador pulse espacio.
+    \item \textbf{MENU}: Pantalla de selección de modo (1 o 2 jugadores).
+    \item \textbf{CHECK\_PLAYERS}: (Solo multijugador) Verifica que ambos jugadores estén en posición y listos antes de comenzar.
     \item \textbf{SHOW\_NEW\_STEP}: El turno de la CPU. El sistema:
     \begin{itemize}
         \item Añade un nuevo paso a la secuencia.
-        \item Utiliza \textbf{Pyttsx3} para verbalizar el comando (ej. "Simón dice: Victoria").
-        \item Muestra texto en pantalla usando \textbf{Pillow} para renderizar una tipografía personalizada.
+        \item Reproduce el archivo de audio correspondiente a la instrucción.
+        \item Muestra texto en pantalla usando \textbf{Pillow}.
     \end{itemize}
-    \item \textbf{WAIT\_NEUTRAL}: Estado intermedio que obliga al jugador a volver a una posición neutra. Esto evita que el sistema detecte erróneamente el gesto anterior como el inicio del nuevo.
-    \item \textbf{PLAYER\_TURN}: El jugador debe repetir la secuencia. El sistema valida en tiempo real si el gesto detectado coincide con el esperado.
-    \item \textbf{GAMEOVER} / \textbf{SUCCESS}: Estados finales de ronda.
+    \item \textbf{WAIT\_NEUTRAL}: Estado de sincronización que obliga a todos los jugadores activos a volver a una posición neutra antes de la siguiente acción, evitando falsos positivos.
+    \item \textbf{PLAYER\_TURN}: Fase de ejecución. El sistema valida en tiempo real si el gesto detectado coincide con el esperado para cada jugador activo.
+    \item \textbf{GAME\_OVER} / \textbf{SUCCESS\_SEQUENCE}: Estados finales de ronda o partida.
 \end{enumerate}
 
 \subsubsection{Niveles de dificultad y trampas}
-Una característica clave implementada en el código es la lógica de "trampas", inspirada en el juego real:
+Una característica clave es la lógica de "trampas", inspirada en el juego real:
 \begin{itemize}
     \item \textbf{Nivel básico}: El juego siempre dice ``Simón dice...''.
     \item \textbf{Nivel intermedio}: Aparecen comandos como ``Modesto dice...'' El jugador \textbf{no} debe realizar el gesto. Si se mueve, pierde.
@@ -235,17 +254,50 @@ Una característica clave implementada en el código es la lógica de "trampas",
 \end{itemize}
 Esta lógica se gestiona mediante la función \texttt{add\_sequence\_step}, que genera aleatoriamente instrucciones válidas o trampas según la puntuación actual.
 
-\subsubsection{Feedback Multimedia}
-El juego no solo es visual, sino que integra audio para mejorar la experiencia:
+\subsubsection{Sistema de Audio Personalizado}
+Inicialmente se contempló el uso de librerías de síntesis de voz (TTS) para narrar las instrucciones. Sin embargo, se detectaron problemas de bloqueo (freezing) al ejecutar el motor TTS en un hilo paralelo al procesamiento de vídeo, lo que afectaba a la fluidez del juego.
+
+Como solución, se implementó un sistema de audio basado en clips pre-grabados:
 \begin{itemize}
-    \item \textbf{Voz}: El motor TTS narra las acciones.
-    \item \textbf{Efectos}: Se utiliza \texttt{pygame.mixer} para reproducir sonidos de éxito o error inmediatamente tras la acción del jugador.
+    \item Se generaron archivos de audio (.mp3) individuales para cada instrucción posible (ej. "simon\_1\_Mano\_Der\_Arriba.mp3").
+    \item Se utiliza \texttt{pygame.mixer} para la reproducción asíncrona de estos sonidos, garantizando que el bucle de vídeo no se detenga.
+    \item Este enfoque permite además personalizar la voz del narrador, añadiendo variedad con voces para "Simón", "Modesto" o instrucciones genéricas.
 \end{itemize}
 
 
 \newpage
 
-% 5. DESAFÍOS TÉCNICOS
+
+% 5. JUSTIFICACIÓN DE DECISIONES DE DISEÑO
+\section{Justificación de decisiones de diseño}
+En el desarrollo de sistemas de visión por computador e interacción en tiempo real, la elección de las herramientas y arquitecturas determina la viabilidad y usabilidad del proyecto. A continuación se detallan y justifican las decisiones técnicas más relevantes adoptadas durante el desarrollo.
+
+\subsection{Extracción de características vs. Redes Convolucionales (CNN)}
+Una decisión fundamental fue optar por una arquitectura de dos etapas: extracción de \textit{landmarks} (puntos clave) con MediaPipe seguida de clasificación con un Perceptrón Multicapa (MLP), en lugar de utilizar una Red Neuronal Convolucional (CNN) \textit{end-to-end} que procese la imagen completa.
+
+\begin{itemize}
+    \item \textbf{Eficiencia Computacional (Latencia)}: 
+    Una imagen estándar de webcam ($1280 \times 720$) contiene casi un millón de píxeles. Procesar esta matriz con una CNN profunda en cada frame requiere una potencia de cálculo considerable (GPU), lo que limitaría el juego a ordenadores potentes. 
+    \\
+    Al utilizar MediaPipe, delegamos la detección espacial a un modelo altamente optimizado para CPU, y nuestro clasificador MLP solo necesita procesar un vector de entrada muy pequeño (42 valores para manos, 936 para cara). Esto garantiza una tasa de fotogramas estable ($>30$ FPS) incluso en equipos portátiles estándar.
+
+    \item \textbf{Robustez y Generalización}: 
+    Las CNNs entrenadas con pocas imágenes tienden a aprender patrones irrelevantes, como el color de fondo o la ropa del usuario (overfitting). Al trabajar exclusivamente con coordenadas geométricas normalizadas, nuestro modelo se vuelve ``ciego'' al entorno. Esto significa que el sistema funciona igual de bien si el usuario está en una habitación oscura, luminosa o con un fondo complejo, ya que solo ``ve'' la posición relativa de los puntos de la mano y la cara.
+\end{itemize}
+
+\subsection{Gestión de Audio: Pre-grabado vs. Síntesis (TTS)}
+La experiencia de usuario requiere instrucciones auditivas claras. Inicialmente se implementó síntesis de voz en tiempo real (\textit{Text-to-Speech}), pero fue descartada en favor de clips de audio pre-grabados.
+
+\begin{itemize}
+    \item \textbf{Bloqueo del Hilo Principal (Thread Blocking)}:
+    Las librerías de TTS en Python, como \texttt{pyttsx3}, suelen operar de forma síncrona o tienen una gestión de hilos compleja que entra en conflicto con el bucle principal de OpenCV (`while True`). Esto provocaba micro-congelamientos ("stuttering") en el vídeo cada vez que el juego hablaba.
+    
+    \item \textbf{Consistencia Estética}:
+    Los motores TTS dependen de las voces instaladas en el sistema operativo del usuario, lo que hace que el juego suene diferente en cada ordenador (a veces con voces robóticas de baja calidad). El uso de archivos \texttt{.mp3} garantiza que todos los jugadores escuchen la misma voz, con la entonación y emoción correctas para el contexto del juego.
+\end{itemize}
+
+% 6. DESAFÍOS TÉCNICOS
+
 \section{Desafíos técnicos y soluciones}
 
 Durante el desarrollo del proyecto surgieron varios retos inherentes a la aplicación de visión por computador en entornos no controlados:
@@ -268,19 +320,20 @@ El procesamiento de vídeo requiere un alto rendimiento para no afectar a la jug
 
 \newpage
 
-% 6. MANUAL DE USUARIO
+% 7. MANUAL DE USUARIO
 \section{Manual de usuario}
 
 \subsection{Requisitos previos}
 Es necesario disponer de una webcam funcional y un entorno con las librerías instaladas:
-\begin{verbatim}
-pip install opencv-python numpy mediapipe scikit-learn pygame pyttsx3 pillow
-\end{verbatim}
+\begin{lstlisting}[language=bash]
+pip install numpy==2.2.6 matplotlib==3.10.7 opencv-contrib-python==4.12.0.88 mediapipe==0.10.14 scikit-learn==1.7.2 pygame==2.6.1 sounddevice==0.5.3 pillow jax jaxlib ipykernel
+\end{lstlisting}
 
 \subsection{Ejecución}
 \begin{enumerate}
     \item Abrir la terminal en la carpeta \texttt{src/game/}.
-    \item Ejecutar el archivo principal del juego: \texttt{python codigo.py}.
+    \item Ejecutar el archivo principal del juego en Jupyter o Python.
+    \item Seleccionar el modo de juego: [1] Un Jugador o [2] Dos Jugadores.
     \item Seguir las instrucciones en pantalla y audio.
 \end{enumerate}
 
@@ -298,7 +351,7 @@ pip install opencv-python numpy mediapipe scikit-learn pygame pyttsx3 pillow
 
 \newpage
 
-% 7. CONCLUSIONES
+% 8. CONCLUSIONES
 \section{Conclusiones}
 Este proyecto demuestra la viabilidad de crear interfaces hombre-máquina naturales y accesibles utilizando hardware de consumo estándar (webcam). La combinación de la extracción de características geométricas (mediante MediaPipe) con clasificadores ligeros (MLP) permite una inferencia en tiempo real extremadamente rápida, adecuada para videojuegos.
 
@@ -306,14 +359,14 @@ La integración de feedback multimedia (voz y sonido) enriquece significativamen
 
 \newpage
 
-% 8. BIBLIOGRAFÍA
+% 9. BIBLIOGRAFÍA
 \section{Bibliografía}
 \begin{itemize}
     \item Documentación de OpenCV: \url{https://docs.opencv.org/}
     \item MediaPipe Solutions: \url{https://google.github.io/mediapipe/}
     \item Scikit-Learn Documentation: \url{https://scikit-learn.org/stable/}
     \item Pygame Documentation: \url{https://www.pygame.org/docs/}
-    \item Pyttsx3 Project: \url{https://pypi.org/project/pyttsx3/}
+
 \end{itemize}
 
 \end{document}
