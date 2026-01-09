@@ -125,8 +125,7 @@ Para el desarrollo de este proyecto se ha utilizado un stack tecnológico basado
     \item \textbf{NumPy}: Esencial para operaciones matemáticas vectoriales, normalización de coordenadas y manipulación de arrays.
     \item \textbf{Pickle}: Para la serialización (guardado) y carga de los modelos entrenados (\texttt{.pkl}).
     \item \textbf{Pygame}: Utilizada para la gestión de efectos de sonido (feedback de acierto/error) en el juego y narración de instrucciones.
-
-    \item \textbf{Pillow (PIL)}: Utilizada para renderizar texto con caracteres UTF-8 (como tildes o la 'ñ') en los frames de OpenCV, ya que la fuente por defecto de OpenCV tiene limitaciones con estos caracteres.
+    \item \textbf{Pillow (PIL)}: Utilizada para renderizar texto UTF-8. Esto es crítico ya que OpenCV utiliza por defecto fuentes tipo \textbf{Hershey}, las cuales carecen de soporte para glifos extendidos (tildes, eñes), lo que comprometería la calidad de la interfaz en castellano.
 \end{itemize}
 
 \newpage
@@ -273,6 +272,7 @@ Se ha introducido la clase \texttt{Player} para gestionar el estado individual d
     \item \textbf{Estado del juego}: Vidas restantes, estado de eliminación y progreso en la ronda actual.
     \item \textbf{Detección}: Gesto actual detectado, contadores de estabilidad (frames consecutivos) y tiempos de reacción.
 \end{itemize}
+La clase \texttt{Player} encapsula el estado del participante. Un aspecto técnico crítico es el \textbf{contador de estabilidad}. Para evitar falsos positivos debidos al ruido de la cámara o detecciones efímeras, el sistema solo valida un gesto si este se mantiene idéntico durante un umbral de fotogramas consecutivos (habitualmente $N=5$).
 
 Esta estructura permite que el juego gestione dos versiones:
 \begin{enumerate}
@@ -333,8 +333,6 @@ Esta decisión se fundamenta en los siguientes puntos:
     
     \item \textbf{Modelo de Producción de Máximo Aprendizaje}: Una vez validada la arquitectura del MLP y confirmada su alta precisión (superior al 95\%), se procedió a entrenar el modelo final utilizando el 100\% de los datos disponibles. En entornos de producción, esta práctica garantiza que el clasificador haya "visto" todas las variaciones posibles de los gestos, maximizando su capacidad de respuesta ante el usuario final.
 \end{itemize}
-
-
 
 \begin{quote}
     \textit{Nota sobre el Data Augmentation:} Se es consciente de que la aumentación de datos se realiza de forma previa a la validación. Aunque esto puede optimizar los resultados de la métrica, la robustez final se comprueba mediante las pruebas unitarias en tiempo real descritas en la fase de desarrollo, donde el modelo demuestra su capacidad de generalización ante nuevos usuarios.
@@ -431,11 +429,10 @@ La integración de feedback multimedia (voz y sonido) enriquece significativamen
 % 9. BIBLIOGRAFÍA
 \section{Bibliografía}
 \begin{itemize}
-    \item Documentación de OpenCV: \url{https://docs.opencv.org/}
-    \item MediaPipe Solutions: \url{https://google.github.io/mediapipe/}
+    \item Lugares, C., \& Zhang, F. (2019). \textit{MediaPipe: A Framework for Building Perception Pipelines}. Google Research.
+    \item Kartynnik, Y., et al. (2019). \textit{Real-time Facial Surface Geometry from Monocular Video on Mobile Devices}. arXiv preprint arXiv:1907.06744.
     \item Scikit-Learn Documentation: \url{https://scikit-learn.org/stable/}
-    \item Pygame Documentation: \url{https://www.pygame.org/docs/}
-
+    \item OpenCV Documentation: \url{https://docs.opencv.org/}
 \end{itemize}
 
 \end{document}
