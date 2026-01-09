@@ -9,6 +9,7 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{float}
+\usepackage{amsmath}
 \usepackage{tikz}
 \usetikzlibrary{positioning} 
 
@@ -246,9 +247,9 @@ Dado que el dataset propio es limitado en tamaño, se aplicaron técnicas de aum
 
 \subsubsection{Clasificación con Perceptrón Multicapa (MLP)}
 
-El núcleo de decisión del sistema se basa en un **Perceptrón Multicapa (MLP)**, una red neuronal artificial de tipo \textit{feedforward}. A diferencia de las redes convolucionales (CNN) que extraen características directamente de los píxeles de la imagen, nuestro enfoque se basa en la \textbf{Ingeniería de Características} (\textit{Feature Engineering}) previa realizada por MediaPipe.
+El núcleo de decisión del sistema se basa en un \textbf{Perceptrón Multicapa (MLP)}, una red neuronal artificial de tipo \textit{feedforward}. A diferencia de las redes convolucionales (CNN) que extraen características directamente de los píxeles de la imagen, nuestro enfoque se basa en la \textbf{Ingeniería de Características} (\textit{Feature Engineering}) previa realizada por MediaPipe.
 
-Se ha optado por una **arquitectura unificada y ligera** para ambos modelos (facial y corporal), priorizando la velocidad de procesamiento en tiempo real:
+Se ha optado por una \textbf{arquitectura unificada y ligera} para ambos modelos (facial y corporal), priorizando la velocidad de procesamiento en tiempo real:
 
 \begin{itemize}
     \item \textbf{Arquitectura de la Red (Topología):}
@@ -264,14 +265,14 @@ Se ha optado por una **arquitectura unificada y ligera** para ambos modelos (fac
 \end{itemize}
 
 \paragraph{Justificación de la arquitectura (64, 32):}
-A pesar de que la malla facial cuenta con 468 puntos (936 valores de entrada), se demostró que una primera capa oculta de solo **64 neuronas** es suficiente para extraer las características relevantes.
+A pesar de que la malla facial cuenta con 468 puntos (936 valores de entrada), se demostró que una primera capa oculta de solo \textbf{64 neuronas} es suficiente para extraer las características relevantes.
 \paragraph{Hiperparámetros del entrenamiento:}
 Para ambos modelos se utilizó la implementación \texttt{MLPClassifier} de la librería \textit{Scikit-Learn} con la siguiente configuración:
 \begin{itemize}
     \item \textbf{Función de Activación}: \texttt{ReLU} (Rectified Linear Unit), elegida por su eficiencia computacional.
     \item \textbf{Solver (Optimizador)}: \texttt{Adam}, un algoritmo de optimización estocástica eficiente.
     \item \textbf{Iteraciones máximas}: \texttt{max\_iter=1500}. Se estableció un límite alto para asegurar la convergencia total del modelo, dado que el tamaño reducido de la red minimiza el riesgo de sobreajuste (\textit{overfitting}) y el tiempo de cómputo sigue siendo bajo.
-    \item \textbf{Semilla aleatoria}: Se fijó \texttt{random\_state=42}. Esto anula la aleatoriedad en la inicialización de los pesos sinápticos y en la mezcla de datos (\textit{shuffling}), garantizando la **reproducibilidad** exacta de los resultados y métricas presentados en este documento.
+    \item \textbf{Semilla aleatoria}: Se fijó \texttt{random\_state=42}. Esto anula la aleatoriedad en la inicialización de los pesos sinápticos y en la mezcla de datos (\textit{shuffling}), garantizando la \textbf{reproducibilidad} exacta de los resultados y métricas presentados en este documento.
 \end{itemize}
 
 Esta arquitectura ligera permite que la inferencia del modelo tarde menos de 1 milisegundo en una CPU estándar, siendo ideal para mantener una tasa de FPS alta en el videojuego.
