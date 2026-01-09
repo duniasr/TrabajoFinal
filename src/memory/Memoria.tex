@@ -8,6 +8,7 @@
 \usepackage{geometry}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
+\usepackage{float}
 
 % Márgenes
 \geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
@@ -212,6 +213,56 @@ Se entrenaron dos modelos \texttt{MLPClassifier} (Multi-Layer Perceptron) indepe
 \end{itemize}
 Los modelos alcanzaron una precisión superior al 95\% en el conjunto de validación y se exportaron como archivos \texttt{.pkl} para su uso en producción.
 
+\subsubsection{Evaluación mediante Validación Cruzada (K-Fold)}
+Para garantizar que el modelo no solo memorice los datos (overfitting) sino que sea capaz de generalizar ante nuevos usuarios, no se ha utilizado un único reparto de entrenamiento y prueba. En su lugar, se ha implementado una estrategia de \textbf{Validación Cruzada Estratificada (Stratified K-Fold)} con $k=5$.
+
+Este proceso funciona de la siguiente manera:
+\begin{enumerate}
+    \item El dataset total se divide en 5 bloques o "pliegues" (folds) que mantienen la proporción de cada gesto.
+    \item El sistema realiza 5 iteraciones de entrenamiento. En cada una, utiliza 4 bloques para entrenar y el bloque restante para evaluar la precisión.
+    \item Se calcula la media de los resultados para obtener una \textbf{precisión estimada real}.
+\end{enumerate}
+
+Una vez obtenida una precisión satisfactoria en esta fase (generalmente superior al 95\%), se procede al entrenamiento final utilizando el 100\% de los vectores de características. Esto asegura que el archivo \texttt{.pkl} resultante contenga el máximo conocimiento posible derivado del dataset.
+
+\subsubsection{Análisis de Error: Matriz de Confusión}
+Para profundizar en el rendimiento del modelo más allá del porcentaje de precisión, se generó una \textbf{matriz de confusión}. Esta herramienta es fundamental para identificar qué gestos específicos pueden inducir a error al clasificador.
+
+Al utilizar la técnica de \texttt{cross\_val\_predict}, cada predicción reflejada en la matriz proviene de un subconjunto de datos que el modelo no utilizó para su entrenamiento en esa iteración particular. Esto permite observar:
+
+\begin{itemize}
+    \item \textbf{Falsos Positivos}: Casos donde un gesto neutro se confunde con una acción.
+    \item \textbf{Confusiones Geométricas}: Por ejemplo, si el modelo confunde "Cabeza Derecha" con "Neutro" debido a una inclinación insuficiente.
+    \item \textbf{Sensibilidad del Parpadeo}: Verificar si el cierre de ojos se distingue correctamente de un gesto facial neutro.
+\end{itemize}
+
+Este análisis permitió ajustar los hiperparámetros del MLP y mejorar el proceso de normalización de los \textit{landmarks} en las clases con mayor tasa de error.
+
+A continuación se presentan las matrices de confusión resultantes del entrenamiento final:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/matrix_confusion_facial.png}
+    \caption{Matriz de confusión del modelo de gestos faciales.}
+    \label{fig:conf_facial}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/matrix_confusion_body.png}
+    \caption{Matriz de confusión del modelo de gestos manuales.}
+    \label{fig:conf_body}
+\end{figure}
+
+Como se observa en las Figuras \ref{fig:conf_facial} y \ref{fig:conf_body}, la mayor concentración de predicciones se encuentra en la diagonal principal, lo cual indica un alto nivel de acierto en la clasificación.
+
+Para el \textbf{modelo facial}, se obtuvo una precisión estimada mediante validación cruzada del \textbf{98.99\%}. Los errores son mínimos, lo que confirma que el modelo distingue correctamente entre ojos abiertos/cerrados y los giros de cabeza, a pesar de la sutileza de estos movimientos.
+
+Por su parte, el \textbf{modelo manual} alcanzó una precisión del \textbf{99.47\%}. Esto demuestra que la normalización de los puntos de la mano es efectiva para distinguir entre gestos complejos como "`Victoria"', "`Rock"' o "`Ok"', incluso con variaciones en la ejecución por parte del usuario.
+
+La baja tasa de falsos positivos y negativos valida la estrategia de utilizar \textit{Data Augmentation} sintético, permitiendo que el modelo generalice correctamente sin necesidad de un dataset masivo de imágenes reales.
+
+
 \subsection{Fase 3: Desarrollo del juego}
 La lógica principal del juego reside en el archivo principal (\texttt{src/game/game\_multijugador.ipynb}). El juego está implementado utilizando programación orientada a objetos para permitir la escalabilidad hacia múltiples jugadores.
 
@@ -264,13 +315,30 @@ Como solución, se implementó un sistema de audio basado en clips pre-grabados:
     \item Este enfoque permite además personalizar la voz del narrador, añadiendo variedad con voces para "Simón", "Modesto" o instrucciones genéricas.
 \end{itemize}
 
-
 \newpage
-
 
 % 5. JUSTIFICACIÓN DE DECISIONES DE DISEÑO
 \section{Justificación de decisiones de diseño}
 En el desarrollo de sistemas de visión por computador e interacción en tiempo real, la elección de las herramientas y arquitecturas determina la viabilidad y usabilidad del proyecto. A continuación se detallan y justifican las decisiones técnicas más relevantes adoptadas durante el desarrollo.
+
+\subsection{Estrategia de Validación y Entrenamiento Final}
+A diferencia de los flujos de trabajo convencionales de Machine Learning que dividen el dataset en tres conjuntos estáticos (entrenamiento, validación y prueba), en este proyecto se ha optado por una estrategia basada en \textbf{Validación Cruzada Estratificada (Stratified K-Fold Cross-Validation)} seguida de un re-entrenamiento total.
+
+Esta decisión se fundamenta en los siguientes puntos:
+
+\begin{itemize}
+    \item \textbf{Optimización del Dataset}: Al trabajar con un dataset generado específicamente para este juego, la validación cruzada permite utilizar cada muestra tanto para entrenar como para evaluar en diferentes iteraciones. Esto proporciona una estimación de la precisión mucho más robusta y menos sesgada que un simple \textit{split} de 80/20, especialmente valioso cuando el volumen de datos es moderado.
+    
+    \item \textbf{Garantía de Generalización}: El uso de \texttt{StratifiedKFold} asegura que cada "pliegue" (fold) mantenga la proporción de clases original, evitando que el modelo se sesgue hacia los gestos con más muestras durante la evaluación de su rendimiento.
+    
+    \item \textbf{Modelo de Producción de Máximo Aprendizaje}: Una vez validada la arquitectura del MLP y confirmada su alta precisión (superior al 95\%), se procedió a entrenar el modelo final utilizando el 100\% de los datos disponibles. En entornos de producción, esta práctica garantiza que el clasificador haya "visto" todas las variaciones posibles de los gestos, maximizando su capacidad de respuesta ante el usuario final.
+\end{itemize}
+
+
+
+\begin{quote}
+    \textit{Nota sobre el Data Augmentation:} Se es consciente de que la aumentación de datos se realiza de forma previa a la validación. Aunque esto puede optimizar los resultados de la métrica, la robustez final se comprueba mediante las pruebas unitarias en tiempo real descritas en la fase de desarrollo, donde el modelo demuestra su capacidad de generalización ante nuevos usuarios.
+\end{quote}
 
 \subsection{Extracción de características vs. Redes Convolucionales (CNN)}
 Una decisión fundamental fue optar por una arquitectura de dos etapas: extracción de \textit{landmarks} (puntos clave) con MediaPipe seguida de clasificación con un Perceptrón Multicapa (MLP), en lugar de utilizar una Red Neuronal Convolucional (CNN) \textit{end-to-end} que procese la imagen completa.
@@ -296,6 +364,7 @@ La experiencia de usuario requiere instrucciones auditivas claras. Inicialmente 
     Los motores TTS dependen de las voces instaladas en el sistema operativo del usuario, lo que hace que el juego suene diferente en cada ordenador (a veces con voces robóticas de baja calidad). El uso de archivos \texttt{.mp3} garantiza que todos los jugadores escuchen la misma voz, con la entonación y emoción correctas para el contexto del juego.
 \end{itemize}
 
+\newpage
 % 6. DESAFÍOS TÉCNICOS
 
 \section{Desafíos técnicos y soluciones}
