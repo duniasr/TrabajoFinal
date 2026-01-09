@@ -9,6 +9,8 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{float}
+\usepackage{setspace}
+\usepackage{parskip}
 \usepackage{amsmath}
 \usepackage{tikz}
 \usetikzlibrary{positioning} 
@@ -16,11 +18,19 @@
 % Márgenes
 \geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
 
+% Espaciado entre secciones
+\titlespacing*{\section}{0pt}{12pt}{0pt}
+\titlespacing*{\subsection}{0pt}{12pt}{0pt}
+\titlespacing*{\subsubsection}{0pt}{12pt}{0pt}
+
 % Colores para código
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Interlineado
+\onehalfspacing
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
@@ -45,8 +55,8 @@
 % Encabezado y pie de página
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{Memorizador - Simón Dice}
-\lhead{Visión por Computador}
+\rhead{Memorizador - Simón dice}
+\lhead{Visión por computador}
 \cfoot{\thepage}
 
 \begin{document}
@@ -60,7 +70,7 @@
     \vspace{1.5cm}
     
     {\Large Grado en Ingeniería Informática}\\[0.5cm]
-    {\Large Asignatura: Visión por Computador}
+    {\Large Asignatura: Visión por computador}
     
     \vspace{2cm}
     
@@ -80,26 +90,46 @@
     
 \end{titlepage}
 
+\begin{singlespace}
 \tableofcontents
+\end{singlespace}
 \newpage
 
 % 1. INTRODUCCIÓN
 \section{Introducción}
 
-\subsection{Descripción del proyecto}
-El presente proyecto, titulado <<Simon Dice>>, consiste en el desarrollo de una versión moderna e interactiva del clásico juego de memoria <<Simón Dice>>. La innovación principal radica en la interfaz de usuario: en lugar de utilizar botones físicos o periféricos convencionales (teclado, ratón o mandos), el juego se controla enteramente mediante \textbf{visión artificial (Computer Vision)}.
+\subsection{Contexto y descripción del proyecto}
+La interacción persona-ordenador (HCI) ha evolucionado drásticamente en las últimas décadas, transitando desde las abstractas líneas de comandos hasta las interfaces gráficas táctiles que dominan la actualidad. Sin embargo, la frontera actual de la tecnología busca ir un paso más allá: la eliminación total de la barrera física, dando lugar a las \textbf{interfaces naturales de usuario (NUI)}. En este contexto, la visión por computador se erige como una herramienta fundamental, permitiendo a las máquinas ``ver'' e interpretar el comportamiento humano de manera análoga a como lo hacemos las personas.
 
-El sistema es capaz de reconocer gestos faciales y manuales del jugador en tiempo real a través de una webcam, interpretándolos como comandos de juego. Esto permite una experiencia inmersiva donde el jugador debe replicar secuencias de movimientos corporales (gesticular, mover la cabeza, cerrar ojos) para avanzar.
+El presente proyecto, titulado \textbf{<<Simón Dice - Memorizador>>}, propone una reimaginación moderna e interactiva del clásico juego de memoria auditiva y visual de los años 80. La propuesta elimina los tradicionales botones de colores y mandos físicos, sustituyéndolos por un sistema de control basado enteramente en el reconocimiento de gestos faciales y manuales en tiempo real.
 
-Este enfoque se enmarca dentro de las \textbf{interfaces naturales de usuario (NUI)}, que buscan eliminar la barrera física entre la persona y la máquina, permitiendo una interacción más intuitiva y fluida basada en las capacidades motrices humanas naturales.
+El sistema utiliza una cámara web estándar como único sensor de entrada. A través de ella, captura y procesa las acciones del jugador, quien debe replicar secuencias de comandos cada vez más complejas utilizando su propio cuerpo: desde gestos manuales (como levantar el pulgar, cerrar el puño o hacer el signo de la victoria) hasta expresiones faciales (cerrar los ojos, girar la cabeza). Esta mecánica transforma la experiencia de juego pasiva en una actividad física e inmersiva.
+
+\subsection{Motivación y justificación}
+La elección de este proyecto no es arbitraria, sino que responde a una serie de motivaciones técnicas, académicas y sociales que buscan explorar los límites de la computación accesible.
+
+\begin{itemize}
+    \item \textbf{Exploración de interfaces naturales (NUI)}: Existe un interés creciente en desarrollar sistemas que entiendan el lenguaje corporal humano. La motivación principal es demostrar que es posible crear interfaces fluidas y reactivas sin necesidad de hardware costoso o sensores de profundidad (como Kinect o LiDAR), utilizando únicamente algoritmos eficientes de inteligencia artificial sobre imágenes RGB convencionales.
+    \item \textbf{Accesibilidad y usabilidad}: Los periféricos tradicionales (teclado, ratón, gamepads) pueden suponer una barrera para personas con movilidad reducida en los dedos o dificultades motrices finas. Un sistema basado en gestos amplios y reconocimiento facial abre la puerta a nuevas formas de ocio digital más inclusivas y accesibles.
+    \item \textbf{Desafío del tiempo real}: El proyecto plantea el reto técnico de procesar vídeo de alta resolución, realizar inferencias con modelos de Machine Learning y gestionar la lógica de un videojuego multimedia, todo ello en intervalos de tiempo inferiores a 33 milisegundos (para mantener 30 FPS). Esta exigencia de optimización es una motivación constante para refinar el código y elegir las arquitecturas de red más eficientes.
+    \item \textbf{Aplicación práctica de la inteligencia artificial}: Más allá de la teoría, este trabajo busca aterrizar conceptos abstractos como las redes neuronales (MLP) y la extracción de características (Feature Extraction) en un producto tangible, lúdico y funcional, cerrando la brecha entre los modelos académicos y las aplicaciones del mundo real.
+\end{itemize}
 
 \subsection{Objetivos}
-Los objetivos principales del proyecto son:
+El propósito del proyecto se desglosa en un objetivo general y varios objetivos específicos técnicos que guían el desarrollo.
+
+\subsubsection{Objetivo general}
+Diseñar e implementar un sistema de entretenimiento interactivo basado en visión artificial que sea capaz de interpretar, con alta precisión y baja latencia, un conjunto predefinido de gestos humanos para controlar la lógica del juego "Simón Dice", validando así la viabilidad de las interfaces gestuales en ordenadores de consumo estándar.
+
+\subsubsection{Objetivos específicos}
+Para alcanzar la meta global, se han establecido los siguientes hitos técnicos:
+
 \begin{enumerate}
-    \item \textbf{Implementar un sistema de reconocimiento de gestos robusto}: Utilizando técnicas de aprendizaje automático (Machine Learning) para identificar patrones en tiempo real.
-    \item \textbf{Desarrollar una lógica de juego interactiva}: Crear una máquina de estados que gestione la fluidez del juego, desde el menú hasta la detección de movimientos y la respuesta auditiva/visual.
-    \item \textbf{Integración tecnológica eficiente}: Combinar librerías de visión por computador (OpenCV, MediaPipe) con un sistema de audio personalizado para una experiencia multimedia completa.
-    \item \textbf{Entrenamiento de modelos personalizados}: Crear y entrenar clasificadores neuronales (MLP) capaces de distinguir entre diferentes gestos faciales (ojos cerrados, movimientos de cabeza) y manuales (puño, mano abierta, pulgar arriba, etc.).
+    \item \textbf{Desarrollo de un pipeline de visión robusto}: Implementar un flujo de procesamiento de imágenes que integre la captura, preprocesamiento y extracción de puntos clave (\textit{landmarks}) mediante la librería MediaPipe, garantizando la detección estable de manos y rostro bajo diferentes condiciones de iluminación.
+    \item \textbf{Creación y entrenamiento de modelos de clasificación}: Generar un \textit{dataset} propio, diverso y equilibrado de gestos faciales y manuales. Diseñar, entrenar y validar perfiles de redes neuronales (Perceptrón Multicapa - MLP) capaces de clasificar estos gestos con una precisión superior al 95\%.
+    \item \textbf{Implementación de lógica de juego y máquina de estados}: Programar una arquitectura de software modular que gestione los estados del juego (menú, turno del sistema, turno del jugador, evaluación), asegurando la sincronización entre las instrucciones audiovisuales y la respuesta del usuario.
+    \item \textbf{Integración multimedia y feedback de usuario}: Desarrollar un sistema de retroalimentación claro que informe al jugador de sus aciertos y errores mediante efectos sonoros y visuales en pantalla, minimizando la latencia percibida.
+    \item \textbf{Optimización del rendimiento}: Asegurar que el coste computacional del sistema permita su ejecución fluida en CPUs convencionales, evitando el uso obligatorio de GPUs dedicadas para garantizar la portabilidad del software.
 \end{enumerate}
 
 \newpage
@@ -245,22 +275,22 @@ Dado que el dataset propio es limitado en tamaño, se aplicaron técnicas de aum
     \item \textbf{Escalado y rotación}: Se aplican transformaciones matriciales 2D para simular que el usuario está más cerca/lejos o inclina la mano.
 \end{itemize}
 
-\subsubsection{Clasificación con Perceptrón Multicapa (MLP)}
+\subsubsection{Clasificación con perceptrón multicapa (MLP)}
 
-El núcleo de decisión del sistema se basa en un \textbf{Perceptrón Multicapa (MLP)}, una red neuronal artificial de tipo \textit{feedforward}. A diferencia de las redes convolucionales (CNN) que extraen características directamente de los píxeles de la imagen, nuestro enfoque se basa en la \textbf{Ingeniería de Características} (\textit{Feature Engineering}) previa realizada por MediaPipe.
+El núcleo de decisión del sistema se basa en un \textbf{perceptrón multicapa (MLP)}, una red neuronal artificial de tipo \textit{feedforward}. A diferencia de las redes convolucionales (CNN) que extraen características directamente de los píxeles de la imagen, nuestro enfoque se basa en la \textbf{ingeniería de características} (\textit{Feature Engineering}) previa realizada por MediaPipe.
 
 Se ha optado por una \textbf{arquitectura unificada y ligera} para ambos modelos (facial y corporal), priorizando la velocidad de procesamiento en tiempo real:
 
 \begin{itemize}
-    \item \textbf{Arquitectura de la Red (Topología):}
+    \item \textbf{Arquitectura de la red (topología):}
     \begin{itemize}
-        \item \textbf{Capa de Entrada:} Variable según el modelo.
+        \item \textbf{Capa de entrada:} Variable según el modelo.
         \begin{itemize}
             \item \textit{Manos}: 42 neuronas ($21 \text{ puntos} \times 2 \text{ ejes}$).
             \item \textit{Cara}: 936 neuronas ($468 \text{ puntos} \times 2 \text{ ejes}$).
         \end{itemize}
-        \item \textbf{Capas Ocultas:} $(64, 32)$. Se utiliza una estructura de "embudo". 
-        \item \textbf{Capa de Salida:} Neuronas correspondientes al número de clases a predecir (9 para manos, 4 para cara).
+        \item \textbf{Capas ocultas:} $(64, 32)$. Se utiliza una estructura de "embudo". 
+        \item \textbf{Capa de salida:} Neuronas correspondientes al número de clases a predecir (9 para manos, 4 para cara).
     \end{itemize}
 \end{itemize}
 
@@ -278,8 +308,8 @@ Para ambos modelos se utilizó la implementación \texttt{MLPClassifier} de la l
 Esta arquitectura ligera permite que la inferencia del modelo tarde menos de 1 milisegundo en una CPU estándar, siendo ideal para mantener una tasa de FPS alta en el videojuego.
 
 
-\subsubsection{Evaluación mediante Validación Cruzada (K-Fold)}
-Para garantizar que el modelo no solo memorice los datos (overfitting) sino que sea capaz de generalizar ante nuevos usuarios, no se ha utilizado un único reparto de entrenamiento y prueba. En su lugar, se ha implementado una estrategia de \textbf{Validación Cruzada Estratificada (Stratified K-Fold)} con $k=5$.
+\subsubsection{Evaluación mediante validación cruzada (K-Fold)}
+Para garantizar que el modelo no solo memorice los datos (overfitting) sino que sea capaz de generalizar ante nuevos usuarios, no se ha utilizado un único reparto de entrenamiento y prueba. En su lugar, se ha implementado una estrategia de \textbf{validación cruzada estratificada (Stratified K-Fold)} con $k=5$.
 
 Este proceso funciona de la siguiente manera:
 \begin{enumerate}
@@ -290,15 +320,15 @@ Este proceso funciona de la siguiente manera:
 
 Una vez obtenida una precisión satisfactoria en esta fase (generalmente superior al 95\%), se procede al entrenamiento final utilizando el 100\% de los vectores de características. Esto asegura que el archivo \texttt{.pkl} resultante contenga el máximo conocimiento posible derivado del dataset.
 
-\subsubsection{Análisis de Error: Matriz de Confusión}
+\subsubsection{Análisis de error: matriz de confusión}
 Para profundizar en el rendimiento del modelo más allá del porcentaje de precisión, se generó una \textbf{matriz de confusión}. Esta herramienta es fundamental para identificar qué gestos específicos pueden inducir a error al clasificador.
 
 Al utilizar la técnica de \texttt{cross\_val\_predict}, cada predicción reflejada en la matriz proviene de un subconjunto de datos que el modelo no utilizó para su entrenamiento en esa iteración particular. Esto permite observar:
 
 \begin{itemize}
-    \item \textbf{Falsos Positivos}: Casos donde un gesto neutro se confunde con una acción.
-    \item \textbf{Confusiones Geométricas}: Por ejemplo, si el modelo confunde "Cabeza Derecha" con "Neutro" debido a una inclinación insuficiente.
-    \item \textbf{Sensibilidad del Parpadeo}: Verificar si el cierre de ojos se distingue correctamente de un gesto facial neutro.
+    \item \textbf{Falsos positivos}: Casos donde un gesto neutro se confunde con una acción.
+    \item \textbf{Confusiones geométricas}: Por ejemplo, si el modelo confunde "Cabeza Derecha" con "Neutro" debido a una inclinación insuficiente.
+    \item \textbf{Sensibilidad del parpadeo}: Verificar si el cierre de ojos se distingue correctamente de un gesto facial neutro.
 \end{itemize}
 
 Este análisis permitió ajustar los hiperparámetros del MLP y mejorar el proceso de normalización de los \textit{landmarks} en las clases con mayor tasa de error.
@@ -331,7 +361,7 @@ La baja tasa de falsos positivos y negativos valida la estrategia de utilizar \t
 \subsection{Fase 3: Desarrollo del juego}
 La lógica principal del juego reside en el archivo principal (\texttt{src/game/game\_multijugador.ipynb}). El juego está implementado utilizando programación orientada a objetos para permitir la escalabilidad hacia múltiples jugadores.
 
-\subsubsection{Arquitectura y Clase Jugador}
+\subsubsection{Arquitectura y clase Jugador}
 Se ha introducido la clase \texttt{Player} para gestionar el estado individual de cada participante. Esta clase encapsula:
 \begin{itemize}
     \item \textbf{Identificación}: ID, nombre y límites de pantalla asignados (bounds) para dividir el área de detección en el modo dos jugadores.
@@ -342,8 +372,8 @@ La clase \texttt{Player} encapsula el estado del participante. Un aspecto técni
 
 Esta estructura permite que el juego gestione dos versiones:
 \begin{enumerate}
-    \item \textbf{Un Jugador}: El usuario ocupa toda la pantalla. La lógica se centra en superar la secuencia creciente.
-    \item \textbf{Dos Jugadores (VS)}: La pantalla se divide en dos secciones. Ambos jugadores compiten simultáneamente para completar la misma instrucción. El sistema penaliza individualmente los fallos o la falta de rapidez.
+    \item \textbf{Un jugador}: El usuario ocupa toda la pantalla. La lógica se centra en superar la secuencia creciente.
+    \item \textbf{Dos jugadores (VS)}: La pantalla se divide en dos secciones. Ambos jugadores compiten simultáneamente para completar la misma instrucción. El sistema penaliza individualmente los fallos o la falta de rapidez.
 \end{enumerate}
 
 \subsubsection{Máquina de estados}
@@ -371,7 +401,7 @@ Una característica clave es la lógica de "trampas", inspirada en el juego real
 \end{itemize}
 Esta lógica se gestiona mediante la función \texttt{add\_sequence\_step}, que genera aleatoriamente instrucciones válidas o trampas según la puntuación actual.
 
-\subsubsection{Sistema de Audio Personalizado}
+\subsubsection{Sistema de audio personalizado}
 Inicialmente se contempló el uso de librerías de síntesis de voz (TTS) para narrar las instrucciones. Sin embargo, se detectaron problemas de bloqueo (freezing) al ejecutar el motor TTS en un hilo paralelo al procesamiento de vídeo, lo que afectaba a la fluidez del juego.
 
 Como solución, se implementó un sistema de audio basado en clips pre-grabados:
@@ -387,44 +417,44 @@ Como solución, se implementó un sistema de audio basado en clips pre-grabados:
 \section{Justificación de decisiones de diseño}
 En el desarrollo de sistemas de visión por computador e interacción en tiempo real, la elección de las herramientas y arquitecturas determina la viabilidad y usabilidad del proyecto. A continuación se detallan y justifican las decisiones técnicas más relevantes adoptadas durante el desarrollo.
 
-\subsection{Estrategia de Validación y Entrenamiento Final}
+\subsection{Estrategia de validación y entrenamiento final}
 A diferencia de los flujos de trabajo convencionales de Machine Learning que dividen el dataset en tres conjuntos estáticos (entrenamiento, validación y prueba), en este proyecto se ha optado por una estrategia basada en \textbf{Validación Cruzada Estratificada (Stratified K-Fold Cross-Validation)} seguida de un re-entrenamiento total.
 
 Esta decisión se fundamenta en los siguientes puntos:
 
 \begin{itemize}
-    \item \textbf{Optimización del Dataset}: Al trabajar con un dataset generado específicamente para este juego, la validación cruzada permite utilizar cada muestra tanto para entrenar como para evaluar en diferentes iteraciones. Esto proporciona una estimación de la precisión mucho más robusta y menos sesgada que un simple \textit{split} de 80/20, especialmente valioso cuando el volumen de datos es moderado.
+    \item \textbf{Optimización del dataset}: Al trabajar con un dataset generado específicamente para este juego, la validación cruzada permite utilizar cada muestra tanto para entrenar como para evaluar en diferentes iteraciones. Esto proporciona una estimación de la precisión mucho más robusta y menos sesgada que un simple \textit{split} de 80/20, especialmente valioso cuando el volumen de datos es moderado.
     
-    \item \textbf{Garantía de Generalización}: El uso de \texttt{StratifiedKFold} asegura que cada "pliegue" (fold) mantenga la proporción de clases original, evitando que el modelo se sesgue hacia los gestos con más muestras durante la evaluación de su rendimiento.
+    \item \textbf{Garantía de generalización}: El uso de \texttt{StratifiedKFold} asegura que cada "pliegue" (fold) mantenga la proporción de clases original, evitando que el modelo se sesgue hacia los gestos con más muestras durante la evaluación de su rendimiento.
     
-    \item \textbf{Modelo de Producción de Máximo Aprendizaje}: Una vez validada la arquitectura del MLP y confirmada su alta precisión (superior al 95\%), se procedió a entrenar el modelo final utilizando el 100\% de los datos disponibles. En entornos de producción, esta práctica garantiza que el clasificador haya "visto" todas las variaciones posibles de los gestos, maximizando su capacidad de respuesta ante el usuario final.
+    \item \textbf{Modelo de producción de máximo aprendizaje}: Una vez validada la arquitectura del MLP y confirmada su alta precisión (superior al 95\%), se procedió a entrenar el modelo final utilizando el 100\% de los datos disponibles. En entornos de producción, esta práctica garantiza que el clasificador haya "visto" todas las variaciones posibles de los gestos, maximizando su capacidad de respuesta ante el usuario final.
 \end{itemize}
 
 \begin{quote}
     \textit{Nota sobre el Data Augmentation:} Se es consciente de que la aumentación de datos se realiza de forma previa a la validación. Aunque esto puede optimizar los resultados de la métrica, la robustez final se comprueba mediante las pruebas unitarias en tiempo real descritas en la fase de desarrollo, donde el modelo demuestra su capacidad de generalización ante nuevos usuarios.
 \end{quote}
 
-\subsection{Extracción de características vs. Redes Convolucionales (CNN)}
+\subsection{Extracción de características vs. redes convolucionales}
 Una decisión fundamental fue optar por una arquitectura de dos etapas: extracción de \textit{landmarks} (puntos clave) con MediaPipe seguida de clasificación con un Perceptrón Multicapa (MLP), en lugar de utilizar una Red Neuronal Convolucional (CNN) \textit{end-to-end} que procese la imagen completa.
 
 \begin{itemize}
-    \item \textbf{Eficiencia Computacional (Latencia)}: 
+    \item \textbf{Eficiencia computacional (latencia)}: 
     Una imagen estándar de webcam ($1280 \times 720$) contiene casi un millón de píxeles. Procesar esta matriz con una CNN profunda en cada frame requiere una potencia de cálculo considerable (GPU), lo que limitaría el juego a ordenadores potentes. 
     \\
     Al utilizar MediaPipe, delegamos la detección espacial a un modelo altamente optimizado para CPU, y nuestro clasificador MLP solo necesita procesar un vector de entrada muy pequeño (42 valores para manos, 936 para cara). Esto garantiza una tasa de fotogramas estable ($>30$ FPS) incluso en equipos portátiles estándar.
 
-    \item \textbf{Robustez y Generalización}: 
+    \item \textbf{Robustez y generalización}: 
     Las CNNs entrenadas con pocas imágenes tienden a aprender patrones irrelevantes, como el color de fondo o la ropa del usuario (overfitting). Al trabajar exclusivamente con coordenadas geométricas normalizadas, nuestro modelo se vuelve ``ciego'' al entorno. Esto significa que el sistema funciona igual de bien si el usuario está en una habitación oscura, luminosa o con un fondo complejo, ya que solo ``ve'' la posición relativa de los puntos de la mano y la cara.
 \end{itemize}
 
-\subsection{Gestión de Audio: Pre-grabado vs. Síntesis (TTS)}
+\subsection{Gestión de audio: pre-grabado vs. síntesis (TTS)}
 La experiencia de usuario requiere instrucciones auditivas claras. Inicialmente se implementó síntesis de voz en tiempo real (\textit{Text-to-Speech}), pero fue descartada en favor de clips de audio pre-grabados.
 
 \begin{itemize}
-    \item \textbf{Bloqueo del Hilo Principal (Thread Blocking)}:
+    \item \textbf{Bloqueo del hilo principal (Thread Blocking)}:
     Las librerías de TTS en Python, como \texttt{pyttsx3}, suelen operar de forma síncrona o tienen una gestión de hilos compleja que entra en conflicto con el bucle principal de OpenCV (`while True`). Esto provocaba micro-congelamientos ("stuttering") en el vídeo cada vez que el juego hablaba.
     
-    \item \textbf{Consistencia Estética}:
+    \item \textbf{Consistencia estética}:
     Los motores TTS dependen de las voces instaladas en el sistema operativo del usuario, lo que hace que el juego suene diferente en cada ordenador (a veces con voces robóticas de baja calidad). El uso de archivos \texttt{.mp3} garantiza que todos los jugadores escuchen la misma voz, con la entonación y emoción correctas para el contexto del juego.
 \end{itemize}
 
@@ -443,13 +473,17 @@ Los algoritmos de detección visual son sensibles a las condiciones de luz extre
 En ocasiones, al realizar gestos cerca de la cara, las manos pueden ocultar partes del rostro, confundiendo al detector facial. \\
 \textbf{Solución}: Se implementó una lógica de priorización en el bucle principal del juego y se ajustaron los umbrales de confianza (\texttt{min\_detection\_confidence}) para reducir falsos positivos.
 
-\subsection{Renderizado de Texto}
+\subsection{Renderizado de texto}
 OpenCV no soporta caracteres UTF-8 nativamente, lo que impedía escribir ``Simón'' o ``Puño'' correctamente. \\
 \textbf{Solución}: Se creó la función auxiliar \texttt{poner\_texto\_utf8} que convierte el frame a formato PIL Image, dibuja el texto con una fuente TrueType (.otf) personalizada y lo reconvierte a OpenCV.
 
 \subsection{Latencia en tiempo real}
 El procesamiento de vídeo requiere un alto rendimiento para no afectar a la jugabilidad. \\
 \textbf{Solución}: El uso de clasificadores MLP (redes neuronales simples) sobre vectores de características ligeros, en lugar de redes convolucionales profundas (CNN) sobre imágenes completas, garantiza una tasa de fotogramas (FPS) alta incluso en equipos con hardware modesto.
+
+\subsection{Bloqueo por librerías de audio (pyttsx3)}
+El uso inicial de la librería \texttt{pyttsx3} para la síntesis de voz en tiempo real provocaba bloqueos en el hilo principal de ejecución, congelando el vídeo durante la narración de instrucciones. \\
+\textbf{Solución}: Se sustituyó la síntesis en tiempo real por el uso de clips de audio pre-grabados generados mediante una Inteligencia Artificial de voz neuronal. Se implementó una función asíncrona basada en \texttt{pygame.mixer} y una gestión de cola de reproducción para integrar estos audios sin afectar a los FPS del juego.
 
 \newpage
 
@@ -473,7 +507,7 @@ pip install numpy==2.2.6 matplotlib==3.10.7 opencv-contrib-python==4.12.0.88 med
 \subsection{Cómo jugar}
 \begin{enumerate}
     \item \textbf{Atención}: El juego te hablará y mostrará texto.
-    \item \textbf{Ordenes Válidas}: Si dice ``Simón dice: [Acción]'', debes imitar el gesto.
+    \item \textbf{Órdenes válidas}: Si dice ``Simón dice: [Acción]'', debes imitar el gesto.
     \item \textbf{Trampas}: 
     \begin{itemize}
         \item Si dice ``Modesto dice...'' o no menciona a ``Simón'', ¡No te muevas!
@@ -484,15 +518,72 @@ pip install numpy==2.2.6 matplotlib==3.10.7 opencv-contrib-python==4.12.0.88 med
 
 \newpage
 
-% 8. CONCLUSIONES
-\section{Conclusiones}
-Este proyecto demuestra la viabilidad de crear interfaces hombre-máquina naturales y accesibles utilizando hardware de consumo estándar (webcam). La combinación de la extracción de características geométricas (mediante MediaPipe) con clasificadores ligeros (MLP) permite una inferencia en tiempo real extremadamente rápida, adecuada para videojuegos.
+% 8. PROPUESTAS DE AMPLIACIÓN
+\section{Propuestas de ampliación y trabajo futuro}
 
-La integración de feedback multimedia (voz y sonido) enriquece significativamente la experiencia de usuario, haciendo el juego más dinámico y accesible. El uso de técnicas como la normalización de coordenadas y el aumento de datos ha sido crucial para obtener un sistema robusto.
+Aunque el sistema actual presenta una experiencia de juego completa y funcional, el campo de la visión por computador y las interfaces naturales (NUI) está en constante evolución. A continuación se detallan varias líneas de investigación y desarrollo que podrían enriquecer significativamente el proyecto en futuras iteraciones.
+
+\subsection{Reconocimiento de gestos dinámicos}
+A pesar de la solidez del sistema actual, existe una limitación inherente a su diseño: el modelo clasifica \textbf{posturas estáticas}. El sistema entiende si una mano está abierta o cerrada en un instante concreto ($t$), pero carece de contexto temporal para entender el movimiento que llevó a esa postura.
+
+Para llevar el proyecto al siguiente nivel y permitir una interacción más rica, se propone la siguiente evolución técnica:
+
+\subsubsection{De la foto al vídeo: redes recurrentes}
+La ampliación natural consiste en dotar al sistema de ``memoria''. Técnicamente, esto implicaría sustituir o complementar el clasificador actual por una \textbf{red neuronal recurrente (RNN)}, específicamente una arquitectura \textbf{LSTM (Long Short-Term Memory)}.
+
+En lugar de alimentar al modelo con un único \textit{frame}, se utilizaría una ventana deslizante de los últimos $N$ fotogramas (por ejemplo, los últimos 0.5 segundos). Esto permitiría al sistema analizar no solo la posición de los puntos, sino su \textbf{trayectoria y velocidad}.
+
+\subsubsection{Nuevas mecánicas de juego}
+Esta capacidad de análisis temporal abriría la puerta a gestos complejos que actualmente son imposibles de detectar:
+\begin{itemize}
+    \item \textbf{Gestos de trayectoria:} Instrucciones como ``Saluda con la mano'' o ``Dibuja un círculo en el aire''.
+    \item \textbf{Asentimiento y negación:} Detectar si el usuario mueve la cabeza diciendo ``Sí'' o ``No'', en lugar de solo detectar si mira a la derecha o izquierda.
+    \item \textbf{Análisis de velocidad:} Mecánicas donde el juego pida realizar una acción ``a cámara lenta'' o ``lo más rápido posible''.
+\end{itemize}
+
+Esta evolución requeriría la generación de un nuevo dataset basado en secuencias de vídeo, aumentando la complejidad del entrenamiento, pero elevando exponencialmente la naturalidad de la interacción hombre-máquina.
+
+\subsection{Adaptabilidad emocional y cognitiva}
+Aprovechando la malla facial de alta densidad de MediaPipe (468 puntos), se podría integrar un módulo de análisis de emociones en tiempo real.
+\begin{itemize}
+    \item \textbf{Ajuste de dificultad dinámico}: Si el sistema detecta micro-expresiones de frustración o estrés en el jugador, podría reducir la velocidad de la secuencia de ``Simón'' automáticamente. Por el contrario, si detecta aburrimiento, podría acelerar el ritmo.
+    \item \textbf{Feedback empático}: El juego podría reaccionar a las expresiones del usuario, por ejemplo, animándolo si falla o celebrando con él si sonríe tras un acierto.
+\end{itemize}
+
+\subsection{Soporte multiplataforma y móvil}
+Actualmente, el juego se ejecuta en PC. Una línea de trabajo futura es la migración a arquitecturas móviles (Android/iOS).
+\begin{itemize}
+    \item \textbf{Optimización TFLite}: Convertir los modelos entrenados al formato TensorFlow Lite para permitir la inferencia en dispositivos con recursos limitados (Edge Computing).
+    \item \textbf{Sensores inerciales}: En un entorno móvil, se podrían fusionar los datos de la cámara frontal con los del giroscopio y acelerómetro del teléfono para detectar gestos de inclinación de la cabeza con mayor precisión.
+\end{itemize}
+
+\subsection{Multijugador online (WebRTC)}
+Romper la barrera local y permitir que dos jugadores compitan desde ubicaciones remotas.
+\begin{itemize}
+    \item \textbf{Arquitectura cliente-servidor}: Implementar un servidor de señalización (usando WebSockets) y protocolos WebRTC para transmitir el vídeo y los datos de la partida en tiempo real con baja latencia.
+    \item \textbf{Competitividad}: Crear un ranking global de puntuaciones almacenado en la nube.
+\end{itemize}
 
 \newpage
 
-% 9. BIBLIOGRAFÍA
+% 9. CONCLUSIONES
+\section{Conclusiones}
+
+El desarrollo de \textit{Simón Dice} ha servido para validar una premisa fundamental en la ingeniería de software actual: no siempre es necesario recurrir a la potencia de cálculo bruta para resolver problemas complejos. A veces, un diseño arquitectónico inteligente es mucho más efectivo.
+
+Al finalizar este proyecto, podemos extraer tres conclusiones principales que definen el éxito del sistema:
+
+\begin{enumerate}
+    \item \textbf{La eficiencia de la arquitectura híbrida:} La decisión de desacoplar el problema en dos fases —utilizando MediaPipe para la extracción geométrica y un perceptrón multicapa (MLP) para la clasificación— ha demostrado ser una estrategia superior al uso de redes convolucionales profundas (CNN) para este caso de uso. Hemos logrado una inferencia en tiempo real robusta ($>30$ FPS) en ordenadores portátiles estándar, democratizando el acceso a la aplicación sin depender de tarjetas gráficas dedicadas.
+    
+    \item \textbf{Las matemáticas como herramienta de robustez:} El preprocesamiento de los datos, específicamente la normalización y centrado de coordenadas, resultó ser la clave técnica del proyecto. Gracias a esto, el sistema es prácticamente ``ciego'' al entorno: funciona con la misma precisión si el usuario se encuentra cerca o lejos de la cámara, o si cambia su posición en el encuadre, resolviendo uno de los problemas clásicos de la visión artificial: la invarianza a la escala y traslación.
+    
+    \item \textbf{La tecnología al servicio de la experiencia:} Más allá de la precisión algorítmica, la integración de feedback multimodal (instrucciones por voz y respuesta visual inmediata) transformó un detector de gestos técnico en una experiencia lúdica fluida. Esto demuestra el potencial de las interfaces naturales de usuario (NUI) para crear software más accesible e inmersivo.
+\end{enumerate}
+
+\newpage
+
+% 10. BIBLIOGRAFÍA
 \section{Bibliografía}
 \begin{itemize}
     \item Lugares, C., \& Zhang, F. (2019). \textit{MediaPipe: A Framework for Building Perception Pipelines}. Google Research.
