@@ -9,6 +9,8 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{positioning} 
 
 % Márgenes
 \geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
@@ -196,6 +198,44 @@ En lugar de utilizar redes neuronales convolucionales (CNN) que procesan la imag
     \item Se extraen las coordenadas $(x, y, z)$ de los puntos de interés (468 para cara, 21 para mano).
     \item \textbf{Normalización}: Crucial para que el modelo funcione independientemente de la posición del usuario en la pantalla. Se centra el gesto restando el centroide y se escala dividiendo por la máxima distancia absoluta desde el centro.
 \end{enumerate}
+
+\subsubsection{Pipeline de procesamiento de datos}
+El flujo de transformación de los datos sigue un proceso secuencial diseñado para maximizar la eficiencia. En la Figura \ref{fig:pipeline_tikz} se detalla este esquema.
+
+\begin{figure}[H]
+    \centering
+    \shorthandoff{>} % DESACTIVA el conflicto con Babel español
+    \begin{tikzpicture}[
+        node distance=1cm and 1.5cm,
+        block/.style={rectangle, draw, fill=blue!10, text width=2.8cm, align=center, rounded corners, minimum height=3em},
+        arrow/.style={thick,->,>=stealth}
+    ]
+        % Nodos
+        \node (cam) [block] {Entrada: Cámara (Frame RGB)};
+        \node (mp) [block, right=of cam] {Inferencia MediaPipe (Landmarks)};
+        \node (norm) [block, right=of mp] {Normalización y Centrado};
+        \node (mlp) [block, below=of norm] {Clasificador MLP (.pkl)};
+        \node (game) [block, left=of mlp, xshift=-1cm] {Lógica del Juego (Comando)};
+        
+        % Flechas
+        \draw [arrow] (cam) -- (mp);
+        \draw [arrow] (mp) -- (norm);
+        \draw [arrow] (norm) -- (mlp);
+        \draw [arrow] (mlp) -- (game); 
+        
+    \end{tikzpicture}
+    \shorthandon{>} % REACTIVA Babel español
+    \caption{Esquema del flujo de datos del sistema.}
+    \label{fig:pipeline_tikz}
+\end{figure}
+
+Como se observa, el proceso consta de las siguientes etapas:
+\begin{itemize}
+    \item \textbf{Captura e Inferencia}: MediaPipe localiza los \textit{landmarks} espaciales.
+    \item \textbf{Preprocesamiento}: Se extraen las coordenadas $(x, y)$ y se aplican técnicas de centrado y escalado unitario.
+    \item \textbf{Vectorización}: La matriz de puntos se aplana en un vector unidimensional apto para la entrada de la red neuronal.
+    \item \textbf{Inferencia MLP}: El Perceptrón Multicapa asigna una probabilidad a cada clase de gesto.
+\end{itemize}
 
 \subsubsection{Aumento de datos (data augmentation)}
 Dado que el dataset propio es limitado en tamaño, se aplicaron técnicas de aumento de datos sintético sobre los vectores de características (no sobre las imágenes), lo cual es muy eficiente:
